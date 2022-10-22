@@ -27,7 +27,7 @@ lex to the `NOT` operator so the commands
 
 * `(C1 or C2) and b`
 * `(C1 | C2) & b`
-* `(C1 ∪ C2) ∩ b`
+* `www`
 * etc.
 
 all lex to the same token list, and are all parse to the same commands,
@@ -42,10 +42,10 @@ Java is used to provide an API in the form of an interface, that can
 be implemented to provide support for multiple backends (STAR, TBM, etc.)
 
 ## TODO List
-* Parser *(Scala)*
-* API *(Java)*
-* Tests *(Scala)*
-* API Implementation *(Java)*
-* Interpreter *(Scala)*
-* Command line launch *(Scala)*
-* Cache *(Java)*
+- [ ] Parser *(Scala)*
+- [ ] API *(Java)*
+- [ ] Tests *(Scala)*
+- [ ] API Implementation *(Java)*
+- [ ] Interpreter *(Scala)*
+- [ ] Command line launch *(Scala)*
+- [ ] Cache *(Java)*
