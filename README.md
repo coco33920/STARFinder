@@ -1,4 +1,4 @@
-# STARFinder
+# STARFinder [![License - GPLv3](https://img.shields.io/badge/License-GPLv3-55cdfc?style=for-the-badge)](https://opensource.org/licenses/GPL-3.0) [![Language - Scala](https://img.shields.io/badge/Language-Scala-red?style=for-the-badge&logo=scala)](https://www.scala-lang.org/) [![Version - alpha-0.1](https://img.shields.io/badge/Version-alpha--0.1-f7a8d8?style=for-the-badge&logo=github)](https://www.scala-lang.org/)
 *STARFinder* is a little project to learn Scala, it's built to learn to use features 
 from *Scala*, coming from *OCaml*. The Goal of STARFinder is to use a little 
 easy language to find bus stop according to rules (ex: all bus stops with the C1 or the C2 and the 
