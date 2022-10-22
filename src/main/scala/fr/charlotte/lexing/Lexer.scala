@@ -1,7 +1,8 @@
-package fr.charlotte
+package fr.charlotte.lexing
+
+import Token.Type.*
 
 import scala.collection.mutable
-import Token.Type.*
 
 object Lexer:
   def isAndOperator(input: Char): Boolean =

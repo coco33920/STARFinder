@@ -42,6 +42,7 @@ Java is used to provide an API in the form of an interface, that can
 be implemented to provide support for multiple backends (STAR, TBM, etc.)
 
 ## TODO List
+- [X] AST Type
 - [ ] Parser *(Scala)*
 - [ ] API *(Java)*
 - [ ] Tests *(Scala)*

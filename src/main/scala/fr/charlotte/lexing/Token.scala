@@ -1,6 +1,5 @@
-package fr.charlotte
-
-import fr.charlotte.Token.Type.{AndOperator, False, Identifier, NotOperator, OrOperator, True}
+package fr.charlotte.lexing
+import fr.charlotte.lexing.Token.Type.*
 
 case class Token(
                 tpe: Token.Type,
@@ -20,7 +19,7 @@ object Token:
     case True
     case False
     case EOF
-  
+
   def stringToTokenType(text: String): Type =
     text match
       case "or" => OrOperator
