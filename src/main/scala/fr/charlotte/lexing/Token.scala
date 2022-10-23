@@ -19,6 +19,7 @@ object Token:
     case True
     case False
     case EOF
+    case Null
 
   def stringToTokenType(text: String): Type =
     text match
