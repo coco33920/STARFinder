@@ -75,9 +75,6 @@ def download_bus_lines():
     f.close()
 
 def download_metro_lines():
-    if(os.path.exists("line_star.csv")):
-        print("Extracting lines from cache")
-        return load_save()
     print("Downloading metro lines from star server")
     l = requests.get("https://data.explore.star.fr/api/v2/catalog/datasets/tco-metro-topologie-dessertes-td/exports/json?select=idparcours%2Cnomcourtligne%2Cidarret%2Cnomarret&limit=-1&offset=0&timezone=UTC&apikey=fed3a199f2f8115ee2ed33364187abd315aee657ec95babff1259732")
     v = json.loads(l.content)
@@ -148,6 +145,7 @@ def generate_sql_stops_lines():
                 f.write(k+";"+";".join(list(map(str,va)))+"\n")
     ids = list(a.keys())
     all_sql = []
+
     for id in ids:
         generate_stops_to_list_of_lines(id,a)
     try:
