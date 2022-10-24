@@ -27,7 +27,6 @@ lex to the `NOT` operator so the commands
 
 * `(C1 or C2) and b`
 * `(C1 | C2) & b`
-* `www`
 * etc.
 
 all lex to the same token list, and are all parse to the same commands,
