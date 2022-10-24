@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class STARProvider implements Provider {
 
@@ -61,13 +62,6 @@ public class STARProvider implements Provider {
             System.out.println("The databases are already charged");
         }
     }
-
-    public void readAllLines() throws SQLException {
-        ResultSet rs = this.databaseLite.getResult("SELECT * FROM star_rennes");
-        while (rs.next()){
-            System.out.println(rs.getString(1)+ ";"+rs.getString(2));
-        }
-    }
     @Override
     public void load() {
         try {
@@ -77,14 +71,45 @@ public class STARProvider implements Provider {
         }
     }
 
-    @Override
-    public ArrayList<String> listFromName(String name) {
-        try {
-            readAllLines();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public ArrayList<String> uniqueGet(String statement){
+        ResultSet rs = this.databaseLite.getResult(statement);
+        ArrayList<String> result = new ArrayList<>();
+        while (true) {
+            try {
+                if (!rs.next()) break;
+                String n = rs.getString(1);
+                if(!result.contains(n))
+                    result.add(n);
+            }catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return new ArrayList<String>();
+        return result;
+    }
+
+    @Override
+    public ArrayList<String> listOfLinesFromStopName(String name) {
+        String statement = String.format(
+                "SELECT lignes FROM rennes_star_lines WHERE nomarret=\"%s\"", name
+        );
+        return uniqueGet(statement);
+    }
+
+    @Override
+    public ArrayList<String> listOfStopsFromLineName(String name) {
+        String statement = "select nomarret from rennes_star_lines where lignes like \"%"+name+"%\"";
+        return uniqueGet(statement);
+    }
+
+    @Override
+    public String tableName() {
+        return "lignes";
+    }
+
+    @Override
+    public ArrayList<String> executeValue(String endQuest) {
+        String statement = "select nomarret from rennes_star_lines where " + endQuest;
+        return uniqueGet(statement);
     }
 
     @Override

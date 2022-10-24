@@ -4,12 +4,17 @@ import fr.charlotte.help.DatabaseLite;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface Provider {
     void update();
-    ArrayList<String> listFromName(String name);
+    ArrayList<String> listOfLinesFromStopName(String name);
+    ArrayList<String> listOfStopsFromLineName(String name);
     String implementationName();
+    String tableName();
+    
+    ArrayList<String> executeValue(String endQuest);
 
     default File initializeDatabase(){
         String home = System.getProperty("user.home");

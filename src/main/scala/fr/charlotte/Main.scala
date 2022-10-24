@@ -5,12 +5,11 @@ import fr.charlotte.ast.Parameter.Type.*
 import fr.charlotte.ast.Parser
 import fr.charlotte.lexing.Lexer
 import fr.charlotte.providers.STARProvider
-
+import fr.charlotte.ast.Translator
 def getDefaultProvider: Provider = STARProvider()
 @main def run(): Unit =
   val t = getDefaultProvider
   t.load();
-  t.listFromName("")
   while true do
       println("Input line : ")
       val line = readLine()
@@ -22,3 +21,8 @@ def getDefaultProvider: Provider = STARProvider()
       println(parsed)
       println("Equals to : ")
       println(parsed.print())
+      println("Translate to :")
+      val translator = Translator(t.tableName(),parsed.tpe).translate
+      println(translator)
+      val s = t.executeValue(translator)
+      s.forEach(println)

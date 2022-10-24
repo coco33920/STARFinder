@@ -50,7 +50,7 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
   - [X] Implementation of the database scheme for STAR
   - [ ] Implementation from the interpreter point of vue
   - [ ] Fully functioning one implementation (STAR)
-  - [ ] Implementing more res
+  - [ ] Implementing more res 
 - [X] Tests *(Scala)*
 - [ ] Interpreter *(Scala)*
 - [ ] Command line launch *(Scala)*
