@@ -43,9 +43,10 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
 
 ## TODO List
 - [X] AST Type
-- [ ] Parser *(Scala)*
+- [X] Parser *(Scala)*
   - [X] Basic Parser
-  - [ ] Applying the *not* operator for all expressions
+  - [X] Applying the *not* operator for all expressions
+- [ ] Printing AST
 - [ ] API *(Java)*
 - [ ] Tests *(Scala)*
 - [ ] API Implementation *(Java)*
