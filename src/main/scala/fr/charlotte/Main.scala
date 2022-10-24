@@ -14,3 +14,5 @@ import fr.charlotte.lexing.Lexer
     val parsed = Parser(lexed).parse()
     println("Parsed Line : ")
     println(parsed)
+    println("Equals to : ")
+    println(parsed.print())
