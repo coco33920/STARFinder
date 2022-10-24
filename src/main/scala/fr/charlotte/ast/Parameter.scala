@@ -28,3 +28,10 @@ case class Parameter[A](
                          body: A
                        ):
   override def toString: String = s"[Parameter {Type:$tpe} {Body:$body}]"
+  def print: String =
+    this.tpe match
+      case Parameter.Type.None => ""
+      case Parameter.Type.Argument => this.body.toString
+      case Parameter.Type.OrOperator => "∪"
+      case Parameter.Type.AndOperator => "∩"
+      case Parameter.Type.NotOperator => "¬"
