@@ -5,11 +5,12 @@ import fr.charlotte.ast.Parameter.Type.*
 import fr.charlotte.ast.Parser
 import fr.charlotte.lexing.Lexer
 import fr.charlotte.providers.STARProvider
+
+def getDefaultProvider: Provider = STARProvider()
 @main def run(): Unit =
-  val t = STARProvider()
-  t.readAllLines();
+  val t = getDefaultProvider
   t.load();
-  t.readAllLines();
+  t.listFromName("")
   while true do
       println("Input line : ")
       val line = readLine()

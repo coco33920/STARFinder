@@ -48,28 +48,42 @@ public class STARProvider implements Provider {
         }
     }
 
-    public void loadDatabase(){
-        try {
-            loadFileIntoDatabase("/star/lines.sql");
-            loadFileIntoDatabase("/star/commands.sql");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void loadDatabase() throws SQLException {
+        ResultSet rs = this.databaseLite.getResult("SELECT * FROM star_rennes WHERE id=1");
+        if(!rs.next()) {
+            try {
+                loadFileIntoDatabase("/star/lines.sql");
+                loadFileIntoDatabase("/star/commands.sql");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            System.out.println("The databases are already charged");
         }
     }
 
     public void readAllLines() throws SQLException {
         ResultSet rs = this.databaseLite.getResult("SELECT * FROM star_rennes");
         while (rs.next()){
-            System.out.println(rs.getString(0)+ ";"+rs.getString(1));
+            System.out.println(rs.getString(1)+ ";"+rs.getString(2));
         }
     }
     @Override
     public void load() {
-        loadDatabase();
+        try {
+            loadDatabase();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public ArrayList<String> listFromName(String name) {
+        try {
+            readAllLines();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return new ArrayList<String>();
     }
 

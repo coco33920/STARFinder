@@ -94,7 +94,7 @@ def generate_sql_commands():
         else:
             aller = a2 
             retour = a1
-        commands.append("INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES(\"{0}\",\"{1}\",\"{2}\",\"{3}\");".format(name,aller,retour,b.strip()))
+        commands.append("INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES(\"{0}\",\"{1}\",\"{2}\",\"{3}\") ON CONFLICT DO NOTHING;".format(name,aller,retour,b.strip()))
     v = open("commands.sql", "w")
     commands = "\n".join(commands)
     v.write(commands)
@@ -124,7 +124,7 @@ def generate_sql_stops_lines():
         for ((idarret,nomarret)) in stops_to_list_of_lines.keys():
             values = stops_to_list_of_lines[(idarret,nomarret)]
             s = ";".join(values)
-            all_sql.append("INSERT INTO rennes_star_lines(idarret,nomarret,lignes) VALUES(\"{0}\",\"{1}\",\"{2}\");".format(idarret,nomarret,s))
+            all_sql.append("INSERT INTO rennes_star_lines(idarret,nomarret,lignes) VALUES(\"{0}\",\"{1}\",\"{2}\") ON CONFLICT DO NOTHING;".format(idarret,nomarret,s))
     except:
         print(stops_to_list_of_lines)
     f = open("lines.sql", "w")

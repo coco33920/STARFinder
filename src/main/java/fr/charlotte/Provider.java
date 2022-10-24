@@ -30,7 +30,4 @@ public interface Provider {
     }
 
     void load();
-    /*
-    TODO: Caching
-     */
 }
