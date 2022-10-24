@@ -48,7 +48,7 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
   - [X] Applying the *not* operator for all expressions
 - [X] Printing AST
 - [ ] API *(Java)*
-- [ ] Tests *(Scala)*
+- [X] Tests *(Scala)*
 - [ ] API Implementation *(Java)*
 - [ ] Interpreter *(Scala)*
 - [ ] Command line launch *(Scala)*
