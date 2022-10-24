@@ -15,8 +15,14 @@ class Parser(input: List[Token]){
         //recursive
         case Token(Token.Type.LPar,_,_)::tail =>
           val (value,t) = aux(tail,Ast(Null),Token.Type.Null)
-          val ast = acc.injectValue(value.tpe)
-          aux(t,ast,Token.Type.LPar)
+          lastToken match
+            case Token.Type.NotOperator =>
+              val n_value = value.applyNotOperator()
+              val ast = acc.injectValue(n_value.tpe)
+              aux(t,ast,Token.Type.LPar)
+            case _ =>
+              val ast = acc.injectValue(value.tpe)
+              aux(t, ast, Token.Type.LPar)
 
         //operators
         case Token(Token.Type.AndOperator,_,_)::tail =>
@@ -32,17 +38,13 @@ class Parser(input: List[Token]){
 
         //Identifiers
         case Token(Token.Type.Identifier, text, _) :: tail =>
+          val value = Leaf[String](Parameter[String](Parameter.Type.Argument, text))
           lastToken match
             case Token.Type.NotOperator =>
-              val value = Node[String](
-                Parameter[String](Parameter.Type.NotOperator, ""),
-                Leaf[String](Parameter[String](Parameter.Type.Argument, body=text)),
-                Leaf[String](Parameter[String](Parameter.Type.None, body = ""))
-              )
-              val ast = acc.injectValue(value)
+              val n_val = Ast(value).applyNotOperator()
+              val ast = acc.injectValue(n_val.tpe)
               aux(tail,ast,Token.Type.Identifier)
             case _ =>
-              val value = Leaf[String](Parameter[String](Parameter.Type.Argument, text))
               val ast = acc.injectValue(value)
               aux(tail, ast, Token.Type.Identifier)
 

@@ -11,7 +11,7 @@ object Parameter:
     case NotOperator
     case AndOperator
 
-  def isAnOperator(t: Parameter.Type) =
+  def isAnOperator(t: Parameter.Type): Boolean =
     t match
       case Type.OrOperator | Type.AndOperator | Type.NotOperator => true
       case _ => false

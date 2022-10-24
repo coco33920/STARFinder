@@ -19,6 +19,16 @@ case class Ast(tpe: Ast.Tree):
       case Ast.Tree.Node(s: Parameter[_], s1: Ast.Tree, s2: Ast.Tree) => Ast(Ast.Tree.Node(s, Ast.Tree.Node(s, s1, s2), b))
   }
 
+  def applyNotOperator(): Ast = {
+    Ast(
+      Ast.Tree.Node(
+        Parameter[String](Parameter.Type.NotOperator, ""),
+        this.tpe,
+        Ast.Tree.Leaf(Parameter[String](Parameter.Type.None, ""))
+      )
+    )
+  }
+
   def applyOperator(b: Token.Type): Ast = {
     this.tpe match
       case Ast.Tree.Null => Ast(

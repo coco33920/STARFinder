@@ -67,4 +67,19 @@ class ParserTests extends AnyFunSuite{
     assert(result == should)
   }
 
+  test("Not Value Test"){
+    val result = Parser(Lexer("not (C1 or C2)").lex()).parse()
+    val should = Ast(
+      Node(
+        Parameter(Parameter.Type.NotOperator, ""),
+        Node(Parameter(Parameter.Type.OrOperator, ""),
+          Leaf[String](Parameter(Parameter.Type.Argument, "C1")),
+          Leaf[String](Parameter(Parameter.Type.Argument, "C2"))
+        ),
+        Leaf[String](Parameter(Parameter.Type.None, ""))
+      )
+    )
+    assert(result == should)
+  }
+
 }
