@@ -11,12 +11,19 @@ import java.util.ArrayList;
 
 public class STARProvider implements Provider {
 
+
+    @Override
+    public String implementationName() {
+        return "STAR";
+    }
+
     private final DatabaseLite databaseLite;
 
-    public STARProvider(String file){
+    public STARProvider(){
         System.out.println("Initializing STAR as Provider");
-        System.out.println("File for database is " + file);
-        this.databaseLite = new DatabaseLite(file);
+        File databaseFile = this.initializeDatabase();
+        System.out.println("File for database is " + databaseFile.getName());
+        this.databaseLite = new DatabaseLite(databaseFile.getAbsolutePath());
         this.configureTables();
     }
 
@@ -43,8 +50,8 @@ public class STARProvider implements Provider {
 
     public void loadDatabase(){
         try {
-            loadFileIntoDatabase("star/lines.sql");
-            loadFileIntoDatabase("star/commands.sql");
+            loadFileIntoDatabase("/star/lines.sql");
+            loadFileIntoDatabase("/star/commands.sql");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

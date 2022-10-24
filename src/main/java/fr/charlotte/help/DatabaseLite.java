@@ -21,7 +21,7 @@ public class DatabaseLite {
     public DatabaseLite(String file) {
         try {
             Class.forName("org.sqlite.JDBC");
-            this.connection = DriverManager.getConnection("jdbc:sqlite:"+getClass().getResource("home.db"));
+            this.connection = DriverManager.getConnection("jdbc:sqlite:"+file);
             System.out.println("Database ready!");
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
