@@ -7,6 +7,9 @@ import fr.charlotte.lexing.Lexer
 import fr.charlotte.providers.STARProvider
 @main def run(): Unit =
   val t = STARProvider("home.db")
+  t.readAllLines();
+  t.load();
+  t.readAllLines();
   while true do
       println("Input line : ")
       val line = readLine()
