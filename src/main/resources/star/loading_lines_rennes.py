@@ -55,7 +55,10 @@ def download_all_parcours():
     return lines
 
 def download_bus_lines():
-    print("Downloading lines from star server")
+    if(os.path.exists("line_star.csv")):
+        print("Extracting lines from cache")
+        return load_save()
+    print("Downloading bus lines from star server")
     l = requests.get("https://data.explore.star.fr/api/v2/catalog/datasets/tco-bus-topologie-dessertes-td/exports/json?select=nomcourtligne&limit=-1&offset=0&timezone=UTC&apikey=fed3a199f2f8115ee2ed33364187abd315aee657ec95babff1259732")
     print("Loading into JSON")
     v = json.loads(l.content)
@@ -64,12 +67,39 @@ def download_bus_lines():
     for v1 in v:
         if v1['nomcourtligne'] not in ls:
             ls.append(v1['nomcourtligne'])
-    with open("line_star.csv", "w") as f:
+    with open("line_star.csv", "a") as f:
         for vs in ls:
             q = download_id(vs)
             f.write((vs+q) + "\n")
     print("Closing file")
     f.close()
+
+def download_metro_lines():
+    if(os.path.exists("line_star.csv")):
+        print("Extracting lines from cache")
+        return load_save()
+    print("Downloading metro lines from star server")
+    l = requests.get("https://data.explore.star.fr/api/v2/catalog/datasets/tco-metro-topologie-dessertes-td/exports/json?select=idparcours%2Cnomcourtligne%2Cidarret%2Cnomarret&limit=-1&offset=0&timezone=UTC&apikey=fed3a199f2f8115ee2ed33364187abd315aee657ec95babff1259732")
+    v = json.loads(l.content)
+    seenName = {'a':[],'b':[]}
+    with open("line_star.csv", "a") as f:
+        for vs in v:
+            nom = vs['nomcourtligne']
+            idparcours = vs['idparcours']
+            idarret = vs['idarret']
+            nomarret = vs['nomarret']
+            if not idparcours in seenName[nom]:
+                seenName[nom].append(idparcours)
+            if (idarret,nomarret) in stops_to_list_of_lines.keys():
+                stops_to_list_of_lines[(idarret,nomarret)] += nom
+            else:
+                stops_to_list_of_lines[(idarret,nomarret)] = [nom]
+        f.write("\n")
+        f.write("a;"+";".join(seenName['a']))
+        f.write("\n")
+        f.write("b;"+";".join(seenName['b']))
+        f.flush()
+        f.close()
 
 def generate_sql_commands():
     a = open("line_star.csv")
@@ -124,6 +154,7 @@ def generate_sql_stops_lines():
         for ((idarret,nomarret)) in stops_to_list_of_lines.keys():
             values = stops_to_list_of_lines[(idarret,nomarret)]
             s = ";".join(values)
+            #TODO: avoid duplicate
             all_sql.append("INSERT INTO rennes_star_lines(idarret,nomarret,lignes) VALUES(\"{0}\",\"{1}\",\"{2}\") ON CONFLICT DO NOTHING;".format(idarret,nomarret,s))
     except:
         print(stops_to_list_of_lines)
@@ -146,10 +177,8 @@ def load_save():
 
 print("Loading bus lines...")
 print("")
-#download_bus_lines()
-load_save()
+download_bus_lines()
+download_metro_lines()
 print("Generating SQL lines for corresponding ids to line")
 generate_sql_commands()
-print("Removing files")
-#os.remove("line_star.csv")
 generate_sql_stops_lines()

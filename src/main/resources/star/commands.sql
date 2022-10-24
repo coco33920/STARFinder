@@ -145,3 +145,5 @@ INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES("Ts91","0491
 INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES("TTZ","0804-A-1001-2704","0804-A-1252-2704","0804-A-1192-2704") ON CONFLICT DO NOTHING;
 INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES("235","0235-A-3914-3251","0235-B-3245-3903","") ON CONFLICT DO NOTHING;
 INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES("Ts7","0407-A-3836-2367","0407-B-2365-3837","") ON CONFLICT DO NOTHING;
+INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES("a","1001-A-5001-5015","1001-B-5030-5001","") ON CONFLICT DO NOTHING;
+INSERT INTO star_rennes (name,aller_id,retour_id,other_ways) VALUES("b","1002-A-5050-5064","1002-B-5065-5079","") ON CONFLICT DO NOTHING;
