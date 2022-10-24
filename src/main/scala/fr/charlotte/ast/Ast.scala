@@ -10,6 +10,23 @@ object Ast:
     case Node[A](s: Parameter[A], s1: Tree, s2: Tree)
 
 case class Ast(tpe: Ast.Tree):
+
+  def print(): String = {
+    def recursive_print(b: Ast.Tree): String = {
+      b match
+        case Ast.Tree.Null => ""
+        case Ast.Tree.Leaf(s:Parameter[_]) => s.print
+        case Ast.Tree.Node(s:Parameter[_],s1: Ast.Tree, s2: Ast.Tree) => {
+          val (v1,v2) = (recursive_print(s1),recursive_print(s2))
+          s.tpe match
+            case Parameter.Type.None | Parameter.Type.Argument => v1+v2
+            case Parameter.Type.NotOperator => s.print + "(" + v1 + ")"
+            case Parameter.Type.AndOperator | Parameter.Type.OrOperator => "(" + v1 + " " + s.print + " " + v2 + ")"
+        }
+    }
+    recursive_print(this.tpe)
+  }
+
   def injectValue(b: Ast.Tree): Ast = {
     this.tpe match
       case Ast.Tree.Null => Ast(b)
