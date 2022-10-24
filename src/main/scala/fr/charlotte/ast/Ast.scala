@@ -29,23 +29,29 @@ case class Ast(tpe: Ast.Tree):
     )
   }
 
-  def applyOperator(b: Token.Type): Ast = {
-    this.tpe match
-      case Ast.Tree.Null => Ast(
-        Ast.Tree.Node(
-          Parameter[String](Parameter.fromToken(b), ""),
-          Ast.Tree.Null,
-          Ast.Tree.Null
-        )
+  def createAst(b: Token.Type): Ast = {
+    Ast(
+      Ast.Tree.Node(
+        Parameter[String](Parameter.fromToken(b), ""),
+        Ast.Tree.Null,
+        Ast.Tree.Null
       )
-
-      case Ast.Tree.Leaf(s: Parameter[_]) => Ast(
+    )
+  }
+    def createAstWithValue(b: Token.Type, s:Parameter[_]): Ast = {
+      Ast(
         Ast.Tree.Node(
           Parameter[String](Parameter.fromToken(b), ""),
           Ast.Tree.Leaf(s),
           Ast.Tree.Null
-        )
-      )
+        ))
+    }
+
+  def applyOperator(b: Token.Type): Ast = {
+    this.tpe match
+      case Ast.Tree.Null => createAst(b)
+
+      case Ast.Tree.Leaf(s: Parameter[_]) => createAstWithValue(b,s)
 
       case Ast.Tree.Node(s: Parameter[_], s1: Ast.Tree, s2: Ast.Tree) =>
         if Parameter.isAnOperator(s.tpe) then Ast(
