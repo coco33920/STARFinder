@@ -34,16 +34,17 @@ def download_parcours(s):
     return r
 
 def loadSave():
-    f = open("save.txt", "r")
-    lines = f.read().split("\n")
-    a = {}
-    for line in lines:
-        l = line.split(";")
-        try:
-            a[l[0]] = list(map(eval,l[1:]))
-        except:
-            return a
-    return a
+    with open("save.txt", 'r') as f:
+        lines = f.readlines()
+        a = {}
+        for line in lines:
+            print(line)
+            l = line.split(";")
+            try:
+                a[l[0]] = list(map(eval,l[1:]))
+            except:
+                continue
+        return a
 
 def download_all_parcours():
     if os.path.exists("save.txt"):
@@ -79,18 +80,22 @@ def download_metro_lines():
     l = requests.get("https://data.explore.star.fr/api/v2/catalog/datasets/tco-metro-topologie-dessertes-td/exports/json?select=idparcours%2Cnomcourtligne%2Cidarret%2Cnomarret&limit=-1&offset=0&timezone=UTC&apikey=fed3a199f2f8115ee2ed33364187abd315aee657ec95babff1259732")
     v = json.loads(l.content)
     seenName = {'a':[],'b':[]}
-    with open("line_star.csv", "a") as f:
-        for vs in v:
-            nom = vs['nomcourtligne']
-            idparcours = vs['idparcours']
-            nomarret = vs['nomarret']
-            if not idparcours in seenName[nom]:
-                seenName[nom].append(idparcours)
-            if (nomarret) in stops_to_list_of_lines.keys():
-                if not nom in stops_to_list_of_lines[nomarret]:
-                    stops_to_list_of_lines[nomarret] += nom
-            else:
-                stops_to_list_of_lines[nomarret] = [nom]
+    for vs in v:
+        nom = vs['nomcourtligne']
+        idparcours = vs['idparcours']
+        nomarret = vs['nomarret']
+        if not idparcours in seenName[nom]:
+            seenName[nom].append(idparcours)
+        if (nomarret) in stops_to_list_of_lines.keys():
+            if not nom in stops_to_list_of_lines[nomarret]:
+                stops_to_list_of_lines[nomarret] += nom
+        else:
+            stops_to_list_of_lines[nomarret] = [nom]
+    with open("line_star.csv", "r") as f:
+        if len(f.readlines()) > 0:
+            f.close()
+            return
+    with open("line_star_csv", "a") as f:
         f.write("\n")
         f.write("a;"+";".join(seenName['a']))
         f.write("\n")
@@ -130,9 +135,10 @@ def generate_sql_commands():
 def generate_stops_to_list_of_lines(id,list_of_parcours):
     stops_by_id = list_of_parcours[id]
     name_of_line = id_to_name[id]
+    print(name_of_line,id)
     for (_,nomarret) in stops_by_id:
         if nomarret in stops_to_list_of_lines.keys():
-            if name_of_line not in stops_to_list_of_lines[nomarret]:
+            if not name_of_line in stops_to_list_of_lines[nomarret]:
                 stops_to_list_of_lines[nomarret].append(name_of_line)
         else:
             stops_to_list_of_lines[nomarret] = [name_of_line]
@@ -146,7 +152,6 @@ def generate_sql_stops_lines():
                 f.write(k+";"+";".join(list(map(str,va)))+"\n")
     ids = list(a.keys())
     all_sql = []
-
     for id in ids:
         generate_stops_to_list_of_lines(id,a)
     for nomarret in stops_to_list_of_lines.keys():

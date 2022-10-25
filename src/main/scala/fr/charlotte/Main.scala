@@ -24,5 +24,3 @@ def getDefaultProvider: Provider = STARProvider()
       println("Translate to :")
       val translator = Translator(t.tableName(),parsed.tpe).translate
       println(translator)
-      val s = t.executeValue(translator)
-      s.forEach(println)
