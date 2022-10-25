@@ -38,4 +38,13 @@ object Config {
     this.config = data
   }
 
+  def updateConfiguration(newProvider: String): Unit = {
+    this.config("defaultProvider") = newProvider
+    saveConfig()
+  }
+
+  def saveConfig(): Unit = {
+    os.write.over(os.Path(f.getAbsolutePath), config)
+  }
+
 }
