@@ -21,5 +21,5 @@ def getDefaultProvider: Provider = STARProvider()
       println(parsed)
       val translator = Translator(t.tableName(),parsed.tpe).translate
       val p = t.executeValue(translator)
-      println("List of lines obeying to " + parsed.print())
+      println("List of stops obeying to " + parsed.print())
       println(p)
