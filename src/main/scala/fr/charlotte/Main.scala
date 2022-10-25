@@ -10,7 +10,7 @@ import cats.implicits.*
 import com.monovore.decline.*
 
 
-private var defaultProvider: Provider = STARProvider()
+private var defaultProvider: Provider = null
 def getDefaultProvider: Provider = defaultProvider
 
 /*
@@ -32,6 +32,11 @@ object Main extends CommandApp(
     (providerOpt,infoOpt,updateOpt,verboseOpt).mapN {
       (provider,info,update,verbose) =>
         var repl = false
+        Config.init()
+        Config.initConfig()
+        Config.config("defaultProvider").str.trim match
+          case "STAR" => defaultProvider = STARProvider()
+          case _ => defaultProvider = STARProvider()
         if(update)
           println("Not implemented yet")
           repl = false
