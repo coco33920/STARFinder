@@ -18,11 +18,11 @@ case class Translator(tablename: String, input: Ast.Tree) {
           case Parameter.Type.None => Translator(tablename, tree).translate + " " + Translator(tablename, tree1)
           case Parameter.Type.Argument => Translator(tablename, tree).translate + " " + Translator(tablename, tree1)
           case Parameter.Type.OrOperator
-          => s"($tablename LIKE \"%${Translator(tablename, tree).translate}%\" OR $tablename LIKE \"%${Translator(tablename, tree1).translate})"
+          => s"(${Translator(tablename, tree).translate} OR ${Translator(tablename, tree1).translate})"
           case Parameter.Type.AndOperator
-          => s"($tablename LIKE \"%${Translator(tablename, tree).translate}%\" AND $tablename LIKE \"%${Translator(tablename, tree1).translate})"
+          => s"(${Translator(tablename, tree).translate} AND ${Translator(tablename, tree1).translate})"
           case Parameter.Type.NotOperator
-          => s"($tablename NOT LIKE \"%${Translator(tablename, tree).translate}%\")"
+          => s"(NOT ${Translator(tablename, tree).translate})"
         }
       case _ => ""
   }
