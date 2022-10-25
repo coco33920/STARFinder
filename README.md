@@ -46,9 +46,12 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
   - [X] Basic Parser
   - [X] Applying the *not* operator for all expressions
 - [X] Printing AST
-- [ ] API *(Java)*
+- [ ] Basic API *(Java)*
+  - [X] Implementation of the database scheme for STAR
+  - [X] Implementation from the interpreter point of vue
+  - [X] Fully functioning one implementation (STAR)
+  - [ ] Implementing more res 
 - [X] Tests *(Scala)*
-- [ ] API Implementation *(Java)*
-- [ ] Interpreter *(Scala)*
+- [X] Interpreter (*Translator to SQL*) *(Scala)*
 - [ ] Command line launch *(Scala)*
 - [ ] Cache *(Java)*
