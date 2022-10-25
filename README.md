@@ -48,10 +48,10 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
 - [X] Printing AST
 - [ ] Basic API *(Java)*
   - [X] Implementation of the database scheme for STAR
-  - [ ] Implementation from the interpreter point of vue
-  - [ ] Fully functioning one implementation (STAR)
+  - [X] Implementation from the interpreter point of vue
+  - [X] Fully functioning one implementation (STAR)
   - [ ] Implementing more res 
 - [X] Tests *(Scala)*
-- [ ] Interpreter *(Scala)*
+- [X] Interpreter (*Translator to SQL*) *(Scala)*
 - [ ] Command line launch *(Scala)*
 - [ ] Cache *(Java)*
