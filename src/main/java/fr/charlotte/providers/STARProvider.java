@@ -30,7 +30,7 @@ public class STARProvider implements Provider {
 
     public void configureTables(){
         System.out.println("Configuring database for STAR");
-        String first = "create table if not exists rennes_star_lines(idarret text constraint id primary key,nomarret text,lignes text);";
+        String first = "create table if not exists rennes_star_lines(id integer constraint id primary key autoincrement ,nomarret text,lignes text);";
         String statements = "create table if not exists star_rennes(id integer constraint id primary key autoincrement, name text, aller_id text, retour_id text, other_ways text);";        try {
             databaseLite.getConnection().prepareStatement(first).execute();
             databaseLite.getConnection().prepareStatement(statements).execute();

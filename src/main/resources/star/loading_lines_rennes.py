@@ -83,14 +83,14 @@ def download_metro_lines():
         for vs in v:
             nom = vs['nomcourtligne']
             idparcours = vs['idparcours']
-            idarret = vs['idarret']
             nomarret = vs['nomarret']
             if not idparcours in seenName[nom]:
                 seenName[nom].append(idparcours)
-            if (idarret,nomarret) in stops_to_list_of_lines.keys():
-                stops_to_list_of_lines[(idarret,nomarret)] += nom
+            if (nomarret) in stops_to_list_of_lines.keys():
+                if not nom in stops_to_list_of_lines[nomarret]:
+                    stops_to_list_of_lines[nomarret] += nom
             else:
-                stops_to_list_of_lines[(idarret,nomarret)] = [nom]
+                stops_to_list_of_lines[nomarret] = [nom]
         f.write("\n")
         f.write("a;"+";".join(seenName['a']))
         f.write("\n")
@@ -130,11 +130,12 @@ def generate_sql_commands():
 def generate_stops_to_list_of_lines(id,list_of_parcours):
     stops_by_id = list_of_parcours[id]
     name_of_line = id_to_name[id]
-    for (idarret,nomarret) in stops_by_id:
-        if (idarret,nomarret) in stops_to_list_of_lines.keys():
-            stops_to_list_of_lines[(idarret,nomarret)].append(name_of_line)
+    for (_,nomarret) in stops_by_id:
+        if nomarret in stops_to_list_of_lines.keys():
+            if name_of_line not in stops_to_list_of_lines[nomarret]:
+                stops_to_list_of_lines[nomarret].append(name_of_line)
         else:
-            stops_to_list_of_lines[(idarret,nomarret)] = [name_of_line]
+            stops_to_list_of_lines[nomarret] = [name_of_line]
 
 def generate_sql_stops_lines():
     a = download_all_parcours()
@@ -148,14 +149,10 @@ def generate_sql_stops_lines():
 
     for id in ids:
         generate_stops_to_list_of_lines(id,a)
-    try:
-        for ((idarret,nomarret)) in stops_to_list_of_lines.keys():
-            values = stops_to_list_of_lines[(idarret,nomarret)]
-            s = ";".join(values)
-            #TODO: avoid duplicate
-            all_sql.append("INSERT INTO rennes_star_lines(idarret,nomarret,lignes) VALUES(\"{0}\",\"{1}\",\"{2}\") ON CONFLICT DO NOTHING;".format(idarret,nomarret,s))
-    except:
-        print(stops_to_list_of_lines)
+    for nomarret in stops_to_list_of_lines.keys():
+        values = stops_to_list_of_lines[nomarret]
+        s = ";".join(values)
+        all_sql.append("INSERT INTO rennes_star_lines(nomarret,lignes) VALUES(\"{0}\",\"{1}\") ON CONFLICT DO NOTHING;".format(nomarret,s))
     f = open("lines.sql", "w")
     for s in all_sql:
         f.write(s + "\n")
