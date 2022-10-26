@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![License - GPLv3](https://img.shields.io/badge/License-GPLv3-55cdfc?style=for-the-badge&logo=GNU)](https://opensource.org/licenses/GPL-3.0) [![Language - Scala](https://img.shields.io/badge/Language-Scala-red?style=for-the-badge&logo=scala)](https://www.scala-lang.org/) [![Tag](https://img.shields.io/github/v/release/coco33920/STARFinder.svg?include_prereleases=&sort=semver&color=f7a8d8&style=for-the-badge&logo=github)](https://github.com/coco33920/STARFinder/releases)
+[![License - GPLv3](https://img.shields.io/badge/License-GPLv3-55cdfc?style=for-the-badge&logo=GNU)](https://opensource.org/licenses/GPL-3.0) [![Language - Scala](https://img.shields.io/badge/Language-Scala-red?style=for-the-badge&logo=scala)](https://www.scala-lang.org/) [![Tag](https://img.shields.io/github/v/release/coco33920/STARFinder.svg?include_prereleases=&sort=semver&color=f7a8d8&style=for-the-badge&logo=github)](https://github.com/coco33920/STARFinder/releases/latest)
 
 </div>
 
@@ -14,7 +14,7 @@ easy language to find bus stop according to rules (ex: all bus stops with the C1
 underground b is `(C1 or C2) and b`).
 
 ## Usage
-You can download the latest jar in the [`releases`](https://github.com/coco33920/STARFinder/releases) tab of github or you can compile the code (see [compile](#compiling))
+You can download the latest `star-finder.jar` in the [`releases`](https://github.com/coco33920/STARFinder/releases/latest) tab of github or you can compile the code (see [compile](#compiling))
 
 You can just launch the REPL by running the jar (note: the main code was compiled with OpenJDK 19), switching the providers 
 by using the `--provider "provider"` argument, to see the whole list just run `--help` as arguments
