@@ -14,7 +14,7 @@ easy language to find bus stop according to rules (ex: all bus stops with the C1
 underground b is `(C1 or C2) and b`).
 
 ## Usage
-You can download the latest jar in the [`releases`](https://github.com/coco33920/STARFinder/releases) tab of github or you can compile the code (see [compile](#compiling))
+You can download the latest `star-finder.jar` in the [`releases`](https://github.com/coco33920/STARFinder/releases/latest) tab of github or you can compile the code (see [compile](#compiling))
 
 You can just launch the REPL by running the jar (note: the main code was compiled with OpenJDK 19), switching the providers 
 by using the `--provider "provider"` argument, to see the whole list just run `--help` as arguments
