@@ -1,4 +1,13 @@
-# STARFinder [![License - GPLv3](https://img.shields.io/badge/License-GPLv3-55cdfc?style=for-the-badge&logo=GNU)](https://opensource.org/licenses/GPL-3.0) [![Language - Scala](https://img.shields.io/badge/Language-Scala-red?style=for-the-badge&logo=scala)](https://www.scala-lang.org/) [![Tag](https://img.shields.io/github/v/release/coco33920/STARFinder.svg?include_prereleases=&sort=semver&color=f7a8d8&style=for-the-badge&logo=github)](https://github.com/coco33920/STARFinder/releases)
+# STARFinder [![Scala Test CI](https://github.com/coco33920/STARFinder/workflows/Scala%20Test%20CI/badge.svg)](https://github.com/coco33920/STARFinder/actions?query=workflow:"Scala+Test+CI")
+
+<div align="center">
+
+[![License - GPLv3](https://img.shields.io/badge/License-GPLv3-55cdfc?style=for-the-badge&logo=GNU)](https://opensource.org/licenses/GPL-3.0) [![Language - Scala](https://img.shields.io/badge/Language-Scala-red?style=for-the-badge&logo=scala)](https://www.scala-lang.org/) [![Tag](https://img.shields.io/github/v/release/coco33920/STARFinder.svg?include_prereleases=&sort=semver&color=f7a8d8&style=for-the-badge&logo=github)](https://github.com/coco33920/STARFinder/releases)
+
+</div>
+
+<hr>
+
 *STARFinder* is a little project to learn Scala, it's built to learn to use features 
 from *Scala*, coming from *OCaml*. The Goal of STARFinder is to use a little 
 easy language to find bus stop according to rules (ex: all bus stops with the C1 or the C2 and the 
