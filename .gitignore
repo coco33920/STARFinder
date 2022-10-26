@@ -2,8 +2,10 @@
 .bsp/
 .idea/*
 .idea/
-project/*
-project/
+project/project/*
+project/project/
+project/target/*
+project/target/
 target/*
 target/
 test.db
