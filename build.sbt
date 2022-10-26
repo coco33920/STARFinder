@@ -1,8 +1,8 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "3.2.0"
-mainClass in (assembly) := Some("fr.charlotte.Main")
-assemblyJarName in assembly := "snapshot.jar"
+assembly / (mainClass) := Some("fr.charlotte.Main")
+assembly / assemblyJarName := "snapshot.jar"
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.14" % Test,
   "com.monovore" %% "decline" % "2.3.1",
