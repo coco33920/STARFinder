@@ -6,10 +6,10 @@ import scala.collection.mutable
 
 object Lexer:
   def isAndOperator(input: Char): Boolean =
-    (input == '&') || (input == '∩')
+    (input == '&') || (input == '∩') || (input == '-')
 
   def isOrOperator(input: Char): Boolean =
-    (input == '|') || (input == '∪')
+    (input == '|') || (input == '∪') || (input == '+')
 
   def isNotOperator(input: Char): Boolean =
     (input == '!') || (input == '¬')

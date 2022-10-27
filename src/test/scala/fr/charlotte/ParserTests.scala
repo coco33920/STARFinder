@@ -12,7 +12,7 @@ import fr.charlotte.ast.Parameter.Type.*
 
 class ParserTests extends AnyFunSuite{
   test("Simple command test"){
-    val result = Parser(Lexer("C1 or C2").lex()).parse()
+    val result = Parser(Lexer("C1 + C2").lex()).parse()
     val should = Ast(
       Node(
         Parameter(Parameter.Type.OrOperator, ""),

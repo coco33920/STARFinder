@@ -4,6 +4,7 @@ import fr.charlotte.ast.Translator
 import fr.charlotte.lexing.{Lexer, Token}
 import fr.charlotte.ast.Parser
 import org.jline.reader.impl.DefaultParser
+import org.jline.reader.impl.completer.StringsCompleter
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.AttributedString
@@ -20,11 +21,20 @@ def writeColor(i: Int,s: String, t: Terminal): String = {
 }
 
 class REPL(provider: Provider,var verbose: Boolean) {
-  def main : Unit = {
-    val term = TerminalBuilder.builder();
+  def main() : Unit = {
+    val term = TerminalBuilder.builder()
     val terminal = term.build()
+    val lines = provider.exposeAllLines()
+    lines.add("verbose")
+    lines.add("info")
+    lines.add("exit")
+    lines.add("or")
+    lines.add("and")
+    lines.add("not")
+    val completer = StringsCompleter(lines)
     val lineReader = LineReaderBuilder.builder()
       .terminal(terminal)
+      .completer(completer)
       .parser(DefaultParser())
       .variable(LineReader.INDENTATION, 2)
       .option(LineReader.Option.INSERT_BRACKET, true)
@@ -52,7 +62,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
           continue = false
         case "info" =>
           continue = false
-          terminal.writer().print(writeInBlue("STAR-Finder version 1.1 made by ", terminal))
+          terminal.writer().print(writeInBlue("STAR-Finder version 1.1.1 made by ", terminal))
           terminal.writer().println(writeColor(178, "Charlotte Thomas @ ISTIC Univ-Rennes1", terminal))
           terminal.writer().print(writeInBlue("You're using the backend provided by ", terminal))
           terminal.writer().println(writeColor(178, provider.implementationName(), terminal))

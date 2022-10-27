@@ -48,6 +48,7 @@ language to construct the commands, it supports unicode for multiple way to crea
 command for example
 * `and`
 * `&`
+* `-`
 * `∩`
 
 all lex to the `AND` operator,
@@ -55,6 +56,7 @@ all lex to the `AND` operator,
 * `or`
 * `|`
 * `∪`
+* `+`
 
 all lex to the `OR` operator and finally 
 

@@ -46,7 +46,7 @@ object Main extends CommandApp(
           println("Not implemented yet")
           repl = false
         if (info)
-          println("Version 1.1, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend actuel STAR-Rennes")
+          println("Version 1.1.1, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend actuel STAR-Rennes")
           repl = false
         if (!provider.trim.toLowerCase().equalsIgnoreCase(Config.config("defaultProvider").str.trim)) then
           if verbose then
@@ -57,9 +57,9 @@ object Main extends CommandApp(
           case "rennes" => repl = true
           case _ => if verbose then println("Backend currently supported : STAR/Rennes") else ()
         if (repl)
-          REPL(getDefaultProvider, verbose).main
+          REPL(getDefaultProvider, verbose).main()
     }
   },
 
-  version = "1.1"
+  version = "1.1.1"
 )

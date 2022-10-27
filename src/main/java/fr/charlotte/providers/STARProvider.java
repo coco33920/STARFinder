@@ -108,6 +108,24 @@ public class STARProvider implements Provider {
     }
 
     @Override
+    public ArrayList<String> exposeAllLines() {
+        String statement = "select name from star_rennes";
+        ResultSet rs = databaseLite.getResult(statement);
+        if(rs == null)
+            return new ArrayList<>();
+        ArrayList<String> a = new ArrayList<>();
+        while (true) {
+            try {
+                if (!rs.next()) break;
+                a.add(rs.getString(1));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return a;
+    }
+
+    @Override
     public String tableName() {
         return "lignes";
     }
