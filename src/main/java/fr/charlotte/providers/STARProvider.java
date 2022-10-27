@@ -23,7 +23,6 @@ public class STARProvider implements Provider {
     public STARProvider(){
         System.out.println("Initializing STAR as Provider");
         File databaseFile = this.initializeDatabase();
-        System.out.println("File for database is " + databaseFile.getName());
         this.databaseLite = new DatabaseLite(databaseFile.getAbsolutePath());
         this.configureTables();
     }
@@ -58,8 +57,6 @@ public class STARProvider implements Provider {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }else{
-            System.out.println("The databases are already charged");
         }
     }
     @Override

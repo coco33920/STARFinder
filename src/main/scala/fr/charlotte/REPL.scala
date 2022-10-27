@@ -3,41 +3,32 @@ package fr.charlotte
 import fr.charlotte.ast.Translator
 import fr.charlotte.lexing.Lexer
 import fr.charlotte.ast.Parser
+import org.jline.reader.impl.DefaultParser
+import org.jline.reader.{LineReader, LineReaderBuilder}
+import org.jline.terminal.TerminalBuilder
+import org.jline.utils.AttributedString
 
 import scala.io.StdIn.readLine
+import scala.util.control.Breaks.break
 
 class REPL(provider: Provider,var verbose: Boolean) {
-  def main: Unit = {
-    if(!verbose)
-      println("Welcome to STARFinder 1.0-SNAPSHOT you're currently using the "+ provider.implementationName() + " backend.")
-    else
-      println("Welcome to STARFinder 1.0-SNAPSHOT you're currently using the " + provider.implementationName() + " backend in verbose mode, toggle with verbose.")
-    var c_line = true
-    while(true) {
-      println("What do you want to execute")
-      val t = readLine()
-      c_line = true
-      if(t.equalsIgnoreCase("exit")) then
-        System.exit(0)
-      if(t.equalsIgnoreCase("verbose")) then
-        this.verbose = !(this.verbose)
-        println("You toggle the verbose mode " + (if verbose then "ON" else "OFF"))
-        c_line = false
-      if c_line then
-        val lexed = Lexer(t).lex()
-        if this.verbose then
-          println("Lexed code : ")
-          println(lexed)
-        val parsed = Parser(lexed).parse()
-        if this.verbose then
-          println("Parsed code : ")
-          println(parsed)
-        val translated = Translator(provider.tableName(), parsed.tpe).translate
-        if this.verbose then
-          println("Translated code : ")
-          println(translated)
-        println("List of stops obeying to " + parsed.print())
-        println(provider.executeValue(translated))
+  def main : Unit = {
+    val term = TerminalBuilder.builder();
+    val terminal = term.build()
+    val lineReader = LineReaderBuilder.builder()
+      .terminal(terminal)
+      .parser(DefaultParser())
+      .variable(LineReader.INDENTATION, 2)
+      .option(LineReader.Option.INSERT_BRACKET, true)
+      .build()
+    terminal.writer().println(AttributedString.fromAnsi(s"\u001B[1mfoo\u001B[0m Welcome to STARFinder, provider is ${provider.implementationName()}").toAnsi(terminal))
+    while true do {
+      val line = lineReader.readLine("star-finder ~> ").trim
+      terminal.flush()
+      line match
+        case "exit" => System.exit(0)
+        case _ => ()
     }
+
   }
 }
