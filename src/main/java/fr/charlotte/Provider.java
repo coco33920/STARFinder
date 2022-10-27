@@ -13,7 +13,7 @@ public interface Provider {
     ArrayList<String> listOfStopsFromLineName(String name);
     String implementationName();
     String tableName();
-    
+    String townName();
     ArrayList<String> executeValue(String endQuest);
 
     default File initializeDatabase(){

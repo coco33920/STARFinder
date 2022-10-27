@@ -2,6 +2,7 @@ package fr.charlotte.providers;
 
 import fr.charlotte.Provider;
 import fr.charlotte.help.DatabaseLite;
+import org.sqlite.SQLiteException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -68,8 +69,16 @@ public class STARProvider implements Provider {
         }
     }
 
+    @Override
+    public String townName() {
+        return "Rennes";
+    }
+
     public ArrayList<String> uniqueGet(String statement){
         ResultSet rs = this.databaseLite.getResult(statement);
+        if(rs == null){
+            return new ArrayList<>();
+        }
         ArrayList<String> result = new ArrayList<>();
         while (true) {
             try {
@@ -77,8 +86,8 @@ public class STARProvider implements Provider {
                 String n = rs.getString(1);
                 if(!result.contains(n))
                     result.add(n);
-            }catch (SQLException e) {
-                throw new RuntimeException(e);
+            }catch (Exception e) {
+                return new ArrayList<>();
             }
         }
         return result;

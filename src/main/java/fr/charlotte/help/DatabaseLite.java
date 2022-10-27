@@ -104,10 +104,8 @@ public class DatabaseLite {
             PreparedStatement pst = connection.prepareStatement(query);
             return pst.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            return null;
         }
-
-        return (ResultSet) request;
     }
 
     public void close(){
