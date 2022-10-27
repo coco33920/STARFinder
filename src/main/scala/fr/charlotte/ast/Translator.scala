@@ -15,8 +15,8 @@ case class Translator(tablename: String, input: Ast.Tree) {
       }
       case Node(value: Parameter[_], tree: Ast.Tree, tree1: Ast.Tree) =>
         value.tpe match {
-          case Parameter.Type.None => Translator(tablename, tree).translate + " " + Translator(tablename, tree1)
-          case Parameter.Type.Argument => Translator(tablename, tree).translate + " " + Translator(tablename, tree1)
+          case Parameter.Type.None => Translator(tablename, tree).translate + " " + Translator(tablename, tree1).translate
+          case Parameter.Type.Argument => Translator(tablename, tree).translate + " " + Translator(tablename, tree1).translate
           case Parameter.Type.OrOperator
           => s"(${Translator(tablename, tree).translate} OR ${Translator(tablename, tree1).translate})"
           case Parameter.Type.AndOperator

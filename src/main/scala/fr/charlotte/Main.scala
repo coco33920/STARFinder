@@ -38,7 +38,8 @@ object Main extends CommandApp(
         Config.config("defaultProvider").str.trim match
           case "STAR" => defaultProvider = STARProvider()
           case e => {
-            println("The backend for " + e + " was not implemented yet, defaulting to STAR")
+            if verbose then
+              println("The backend for " + e + " is not implemented yet, defaulting to STAR")
             defaultProvider = STARProvider()
           }
         if (update)
@@ -48,12 +49,13 @@ object Main extends CommandApp(
           println("Version 1.0-Snapshot, Made by Charlotte Thomas @ISTIC Univ-Rennes1 pour apprendre le Scala, backend actuel STAR-Rennes")
           repl = false
         if (!provider.trim.toLowerCase().equalsIgnoreCase(Config.config("defaultProvider").str.trim)) then
-          println("Provider differs... updating configuration accordingly")
+          if verbose then
+            println("Provider differs... updating configuration accordingly")
           Config.updateConfiguration(provider.trim)
         provider.trim().toLowerCase() match
           case "star" => repl = true
           case "rennes" => repl = true
-          case _ => println("Backend currently supported : STAR/Rennes")
+          case _ => if verbose then println("Backend currently supported : STAR/Rennes") else ()
         if (repl)
           REPL(getDefaultProvider, verbose).main
     }
