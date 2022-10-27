@@ -3,6 +3,8 @@ package fr.charlotte.ast
 import fr.charlotte.lexing.Token
 import Ast.Tree.*
 
+import scala.annotation.tailrec
+
 class Parser(input: List[Token]){
   def parse(): Ast =
     def aux(input: List[Token],acc: Ast,lastToken: Token.Type): (Ast,List[Token]) =
