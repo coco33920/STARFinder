@@ -46,7 +46,7 @@ object Main extends CommandApp(
           println("Not implemented yet")
           repl = false
         if (info)
-          println("Version 1.0-Snapshot, Made by Charlotte Thomas @ISTIC Univ-Rennes1 pour apprendre le Scala, backend actuel STAR-Rennes")
+          println("Version 1.1, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend actuel STAR-Rennes")
           repl = false
         if (!provider.trim.toLowerCase().equalsIgnoreCase(Config.config("defaultProvider").str.trim)) then
           if verbose then
@@ -61,5 +61,5 @@ object Main extends CommandApp(
     }
   },
 
-  version = "1.0-Snapshot"
+  version = "1.1"
 )

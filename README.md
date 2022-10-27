@@ -92,6 +92,7 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
 - [X] Interpreter (*Translator to SQL*) *(Scala)*
 - [X] Command line launch *(Scala)*
 - [X] Cache *(Java)*
+- [X] Better REPL
 - [ ] Update provider
 - [ ] Implementing more providers 
   - [X] Rennes
@@ -103,3 +104,13 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
   - [ ] Bordeaux
   - [ ] Toulouse 
   - [ ] Montpellier
+
+## Libraries
+This project is using
+* [Scala-Test](https://github.com/scalatest/scalatest) under Apache-2.0 license
+* [Decline](https://github.com/bkirwi/decline) under Apache-2.0 license
+* [µPickles](https://github.com/com-lihaoyi/upickle) under MIT license
+* [os](https://github.com/com-lihaoyi/os-lib) under MIT license
+* [sql-lite jdbc](https://github.com/xerial/sqlite-jdbc) under Apache-2.0 and BSD license 
+* [apache common-io](https://github.com/apache/commons-io) under Apache-2.0 license
+* [JLine](https://github.com/jline/jline3) under BSD license (see [JLine disclaimer](LICENCE-jline.md))

@@ -52,7 +52,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
           continue = false
         case "info" =>
           continue = false
-          terminal.writer().print(writeInBlue("STAR-Finder version 1.0-Snapshot made by ", terminal))
+          terminal.writer().print(writeInBlue("STAR-Finder version 1.1 made by ", terminal))
           terminal.writer().println(writeColor(178, "Charlotte Thomas @ ISTIC Univ-Rennes1", terminal))
           terminal.writer().print(writeInBlue("You're using the backend provided by ", terminal))
           terminal.writer().println(writeColor(178, provider.implementationName(), terminal))

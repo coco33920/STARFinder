@@ -1,8 +1,8 @@
-ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / version := "1.1"
 
 ThisBuild / scalaVersion := "3.2.0"
 assembly / mainClass := Some("fr.charlotte.Main")
-assembly / assemblyJarName := "snapshot.jar"
+assembly / assemblyJarName := "star-finder.jar"
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.14" % Test,
   "com.monovore" %% "decline" % "2.3.1",
