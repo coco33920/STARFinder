@@ -21,9 +21,9 @@ class REPL(provider: Provider,var verbose: Boolean) {
       .variable(LineReader.INDENTATION, 2)
       .option(LineReader.Option.INSERT_BRACKET, true)
       .build()
-    terminal.writer().println(AttributedString.fromAnsi(s"\u001B[1mfoo\u001B[0m Welcome to STARFinder, provider is ${provider.implementationName()}").toAnsi(terminal))
+    terminal.writer().println(AttributedString.fromAnsi(s"\u001B[38;5;39mWelcome to STARFinder, provided by \u001B[0m\u001B[38;5;178m${provider.implementationName()}\u001B[0m").toAnsi(terminal))
     while true do {
-      val line = lineReader.readLine("star-finder ~> ").trim
+      val line = lineReader.readLine(AttributedString.fromAnsi("\u001B[38;5;219mstar-finder ~> \u001B[0m\u001B[1m").toAnsi()).trim
       terminal.flush()
       line match
         case "exit" => System.exit(0)
