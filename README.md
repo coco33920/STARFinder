@@ -3,7 +3,7 @@
 <div align="center">
 
 [![Language - Scala](https://img.shields.io/badge/Language-Scala-darkred?style=for-the-badge&logo=scala)](https://www.scala-lang.org/) 
-[![License - GPLv3](https://img.shields.io/badge/License-GPLv3-55cdfc?style=for-the-badge&logo=GNU)](https://opensource.org/licenses/GPL-3.0) 
+[![Licence](https://img.shields.io/badge/License-GPLv3-red?style=for-the-badge&logo=GNU&color=55cdfc)](LICENCE.md)
 [![Tag](https://img.shields.io/github/v/release/coco33920/STARFinder.svg?include_prereleases=&sort=semver&color=f7a8d8&style=for-the-badge&logo=github)](https://github.com/coco33920/STARFinder/releases/latest)
 
 </div>
