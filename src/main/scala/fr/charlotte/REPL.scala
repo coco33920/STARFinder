@@ -7,16 +7,17 @@ import org.jline.reader.impl.completer.StringsCompleter
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.AttributedString
-
+import REPL.*
 import scala.io.StdIn.readLine
 import scala.util.control.Breaks.break
+object REPL {
+  def writeInBlue(s: String, t: Terminal): String = {
+    AttributedString.fromAnsi(s"\u001B[38;5;39m${s}\u001B[0m").toAnsi(t)
+  }
 
-def writeInBlue(s: String,t: Terminal): String = {
-  AttributedString.fromAnsi(s"\u001B[38;5;39m${s}\u001B[0m").toAnsi(t)
-}
-
-def writeColor(i: Int,s: String, t: Terminal): String = {
-  AttributedString.fromAnsi(s"\u001B[38;5;${i}m${s}\u001B[0m").toAnsi(t)
+  def writeColor(i: Int, s: String, t: Terminal): String = {
+    AttributedString.fromAnsi(s"\u001B[38;5;${i}m${s}\u001B[0m").toAnsi(t)
+  }
 }
 
 class REPL(provider: Provider,var verbose: Boolean) {
@@ -71,7 +72,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
       if continue then
         val lexed = Lexer(line).lex()
         val parsed = Parser(lexed).parse()
-        val (executed,translated) = Interpreter(provider,parsed).interprete
+        val (prompt,executed,translated) = Interpreter(provider,parsed,terminal).interprete
         if(verbose){
           terminal.writer().println(writeInBlue("Lexed code", terminal))
           terminal.writer().println(writeColor(178, lexed.toString(), terminal))
@@ -80,8 +81,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
           terminal.writer().println(writeInBlue("Translated code", terminal))
           terminal.writer().println(writeColor(178, translated, terminal))
         }
-        terminal.writer().print(writeInBlue("Bus stops obeying the rule : ", terminal))
-        terminal.writer().println(writeColor(178, parsed.print(), terminal))
+        terminal.writer().println(prompt)
         terminal.writer().println(writeColor(178, executed.toString, terminal))
     }
 
