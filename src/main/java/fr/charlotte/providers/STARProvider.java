@@ -98,13 +98,19 @@ public class STARProvider implements Provider {
         String statement = String.format(
                 "SELECT lignes FROM rennes_star_lines WHERE nomarret=\"%s\"", name
         );
-        return uniqueGet(statement);
+        ArrayList<String> s = uniqueGet(statement);
+        ArrayList<String> result = new ArrayList<>();
+        s.forEach(s1 -> result.addAll(Arrays.stream(s1.split(";")).toList()));
+        return result;
     }
 
     @Override
     public ArrayList<String> listOfStopsFromLineName(String name) {
         String statement = "select nomarret from rennes_star_lines where lignes like \"%"+name+"%\"";
-        return uniqueGet(statement);
+        ArrayList<String> s = uniqueGet(statement);
+        ArrayList<String> result = new ArrayList<>();
+        s.forEach(s1 -> result.addAll(Arrays.stream(s1.split(";")).toList()));
+        return result;
     }
 
     @Override

@@ -24,7 +24,7 @@ object Token:
     case Null
 
   def stringToTokenType(text: String): Type =
-    text match
+    text.trim match
       case "or" => OrOperator
       case "and" => AndOperator
       case "not" => NotOperator

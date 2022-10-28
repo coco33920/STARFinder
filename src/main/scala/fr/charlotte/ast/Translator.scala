@@ -22,8 +22,8 @@ case class Translator(tablename: String, input: Ast.Tree) {
           => s"(${Translator(tablename, tree).translate} AND ${Translator(tablename, tree1).translate})"
           case Parameter.Type.NotOperator
           => s"(NOT ${Translator(tablename, tree).translate})"
-          case _ => "Error"
+          case _ => throw new RuntimeException("Parameter error in translation, cannot complete")
         }
-      case _ => "Error"
+      case _ => throw new RuntimeException("Parameter error in translation, cannot complete")
   }
 }

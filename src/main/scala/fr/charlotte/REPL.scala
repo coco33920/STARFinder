@@ -8,6 +8,8 @@ import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.AttributedString
 import REPL.*
+
+import java.util
 import scala.io.StdIn.readLine
 import scala.util.control.Breaks.break
 object REPL {
@@ -70,19 +72,45 @@ class REPL(provider: Provider,var verbose: Boolean) {
           terminal.writer().println(writeColor(178, provider.townName(), terminal))
         case _ => ()
       if continue then
-        val lexed = Lexer(line).lex()
-        val parsed = Parser(lexed).parse()
-        val (prompt,executed,translated) = Interpreter(provider,parsed,terminal).interprete
-        if(verbose){
-          terminal.writer().println(writeInBlue("Lexed code", terminal))
-          terminal.writer().println(writeColor(178, lexed.toString(), terminal))
-          terminal.writer().println(writeInBlue("Parsed code", terminal))
-          terminal.writer().println(writeColor(178, parsed.toString, terminal))
-          terminal.writer().println(writeInBlue("Translated code", terminal))
-          terminal.writer().println(writeColor(178, translated, terminal))
+        var c = true
+        var lexed: List[Token] = null
+        try {
+          lexed = Lexer(line).lex()
+        }catch{
+          case s1: RuntimeException =>
+            terminal.writer().println(writeColor(160,s1.getMessage, terminal))
+            c = false
         }
-        terminal.writer().println(prompt)
-        terminal.writer().println(writeColor(178, executed.toString, terminal))
+        if c then
+          var level = true
+          val parsed = Parser(lexed).parse()
+          var prompt: String = ""
+          var executed: util.ArrayList[String] = null
+          var translated: String = ""
+          try {
+           val (p,e,t) = Interpreter(provider, parsed, terminal).interprete
+            prompt = p
+            executed = e
+            translated = t
+          }catch{
+            case e: RuntimeException =>
+              terminal.writer().println(writeColor(160,e.getMessage,terminal))
+              level = false
+          }
+          if level then
+            if(verbose){
+              terminal.writer().println(writeInBlue("Lexed code", terminal))
+              terminal.writer().println(writeColor(178, lexed.toString(), terminal))
+              terminal.writer().println(writeInBlue("Parsed code", terminal))
+              terminal.writer().println(writeColor(178, parsed.toString, terminal))
+              terminal.writer().println(writeInBlue("Translated code", terminal))
+              terminal.writer().println(writeColor(178, translated, terminal))
+            }
+            terminal.writer().println(prompt)
+            if(!executed.isEmpty)
+              terminal.writer().println(writeColor(178, executed.toString, terminal))
+            else
+              terminal.writer().println(writeInBlue("No output available please retry", terminal))
     }
 
   }
