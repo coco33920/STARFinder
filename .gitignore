@@ -6,6 +6,7 @@ project/project/*
 project/project/
 project/target/*
 project/target/
+src/main/java/fr/charlotte/providers/Test.java
 target/*
 target/
 test.db
