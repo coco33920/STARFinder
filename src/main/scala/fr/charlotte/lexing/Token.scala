@@ -22,6 +22,7 @@ object Token:
     case False
     case EOF
     case Null
+    case AllowKeyword
 
   def stringToTokenType(text: String): Type =
     text.trim match
@@ -33,6 +34,7 @@ object Token:
       case "->" => ToOperator
       case "true" => True
       case "false" => False
+      case "allow" => AllowKeyword
       case _ => Identifier
   def printToken(t: Token.Type): String =
     t match
@@ -47,4 +49,5 @@ object Token:
       case Null => ""
       case EOF => "<EOF>"
       case False => "false"
+      case AllowKeyword => "allow"
       case Identifier => ""

@@ -14,4 +14,7 @@ class TranslatorTest extends AnyFunSuite {
     val should = "(((lignes LIKE \"%C1%\") AND (lignes LIKE \"%C2%\")) AND (lignes LIKE \"%C3%\"))"
     assert(p.equalsIgnoreCase(should))
   }
+  
+  
+  
 }

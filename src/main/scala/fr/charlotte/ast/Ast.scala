@@ -1,5 +1,6 @@
 package fr.charlotte.ast
 
+import fr.charlotte.STARException
 import fr.charlotte.lexing.Token
 import fr.charlotte.ast.Parameter
 
@@ -34,6 +35,15 @@ case class Ast(tpe: Ast.Tree):
       case Ast.Tree.Node(s: Parameter[_], s1: Ast.Tree, Ast.Tree.Null) => Ast(Ast.Tree.Node(s, s1, b))
       case Ast.Tree.Node(s: Parameter[_], Ast.Tree.Null, s1: Ast.Tree) => Ast(Ast.Tree.Node(s, b, s1))
       case Ast.Tree.Node(s: Parameter[_], s1: Ast.Tree, s2: Ast.Tree) => Ast(Ast.Tree.Node(s, Ast.Tree.Node(s, s1, s2), b))
+  }
+  
+  def injectToAllow(i: Int): Ast = {
+    this.tpe match
+      case Ast.Tree.Node(s: Parameter[_],s1: Ast.Tree, s2: Ast.Tree) => 
+        s.tpe match
+          case Parameter.Type.ToOperator => Ast(Ast.Tree.Node(Parameter[Int](Parameter.Type.ToOperator, i),s1,s2))
+          case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
+      case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
   }
 
   def applyNotOperator(): Ast = {

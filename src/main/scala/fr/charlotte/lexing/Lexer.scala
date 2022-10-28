@@ -1,6 +1,7 @@
 package fr.charlotte.lexing
 
 import Token.Type.*
+import fr.charlotte.STARException
 import fr.charlotte.lexing.Lexer.isAnAllowedCharacter
 
 import scala.collection.mutable
@@ -85,7 +86,7 @@ class Lexer(input: String){
         currentPos += 1
         token += Token(Token.Type.Quote, "", tokenStartPos)
       else
-        throw new RuntimeException(s"Lexing cannot complete, unknown character ${input(currentPos)} at position ${currentPos}")
+        throw new STARException("Lexing Error",s"Lexing cannot complete, unknown character ${input(currentPos)} at position ${currentPos}")
 
     token += Token(EOF, "<EOF>", currentPos)
     token.toList

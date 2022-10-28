@@ -2,6 +2,7 @@ package fr.charlotte.ast
 
 import fr.charlotte.lexing.Token
 import Ast.Tree.*
+import fr.charlotte.STARException
 
 import scala.annotation.tailrec
 
@@ -14,7 +15,7 @@ class Parser(input: List[Token]){
         case Token(Token.Type.Quote, _, _)::tail => (acc.trim,tail)
         case Token(Token.Type.Identifier, text, _)::tail => aux(tail,(acc+" "+text))
         case Token(t,_,_)::tail => aux(tail, acc+" "+Token.printToken(t))
-        case Nil => (acc.trim,List.empty[Token])
+        case _ => (acc,List.empty[Token])
     }
     aux(input, "")
   }
@@ -26,7 +27,7 @@ class Parser(input: List[Token]){
         case i if i.isEmpty => (acc,List.empty[Token])
         case Token(Token.Type.RPar,_,_)::tail => (acc,tail)
         case Token(Token.Type.EOF,_,_)::_ => (acc,List.empty[Token])
-
+        case Token(Token.Type.AllowKeyword,_,_)::tail => aux(tail,acc,Token.Type.AllowKeyword)
         case Token(Token.Type.Quote,_,_)::tail =>
           val (str,t) = parse_string(tail)
           val a = Ast.Tree.Leaf[String](Parameter(Parameter.Type.Argument,str))
@@ -65,6 +66,15 @@ class Parser(input: List[Token]){
         case Token(Token.Type.Identifier, text, _) :: tail =>
           val value = Leaf[String](Parameter[String](Parameter.Type.Argument, text))
           lastToken match
+            case Token.Type.AllowKeyword =>
+              var v = 0
+              try{
+                v = Integer.parseInt(text)
+              }catch {
+                case _: Exception => throw new STARException("Syntax Error","Parsing could not finish, allow should not be used with non-integers")
+              }
+              val ast = acc.injectToAllow(v)
+              aux(tail,ast,Token.Type.Identifier)
             case Token.Type.NotOperator =>
               val n_val = Ast(value).applyNotOperator()
               val ast = acc.injectValue(n_val.tpe)
@@ -74,7 +84,7 @@ class Parser(input: List[Token]){
               aux(tail, ast, Token.Type.Identifier)
 
 
-        case _ => (Ast(Null),List.empty[Token])
+        case _ => throw new STARException("Syntax Error","Parsing could not finish, error while parsing")
     val (end,_) = aux(this.input,Ast(Null),Token.Type.Null)
     end
 }

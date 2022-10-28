@@ -1,6 +1,6 @@
 package fr.charlotte
 
-import fr.charlotte.ast.{Interpreter, Parser, Translator}
+import fr.charlotte.ast.{Ast, Interpreter, Parser, Translator}
 import fr.charlotte.lexing.{Lexer, Token}
 import org.jline.reader.impl.DefaultParser
 import org.jline.reader.impl.completer.StringsCompleter
@@ -81,40 +81,54 @@ class REPL(provider: Provider,var verbose: Boolean) {
         try {
           lexed = Lexer(line).lex()
         }catch{
-          case s1: RuntimeException =>
-            terminal.writer().println(writeColor(160,s1.getMessage, terminal))
+          case s1: STARException =>
+            terminal.writer().print(writeColor(160,s1.getName, terminal))
+            terminal.writer().println(writeInBlue(s1.getMessage, terminal))
             c = false
         }
         if c then
+          var levels = true
           var level = true
-          val parsed = Parser(lexed).parse()
-          var prompt: String = ""
-          var executed: util.ArrayList[String] = null
-          var translated: String = ""
+          var parsed: Ast = null
           try {
-           val (p,e,t) = Interpreter(provider, parsed, terminal).interprete
-            prompt = p
-            executed = e
-            translated = t
+            parsed = Parser(lexed).parse()
           }catch{
-            case e: RuntimeException =>
-              terminal.writer().println(writeColor(160,e.getMessage,terminal))
-              level = false
+            case e: STARException =>
+              terminal.writer().print(writeColor(160,e.getName,terminal))
+              terminal.writer().println(writeInBlue(e.getMessage, terminal))
+              levels = false
           }
-          if level then
-            if(verbose){
-              terminal.writer().println(writeInBlue("Lexed code", terminal))
-              terminal.writer().println(writeColor(178, lexed.toString(), terminal))
-              terminal.writer().println(writeInBlue("Parsed code", terminal))
-              terminal.writer().println(writeColor(178, parsed.toString, terminal))
-              terminal.writer().println(writeInBlue("Translated code", terminal))
-              terminal.writer().println(writeColor(178, translated, terminal))
+          if(levels) then
+            var prompt: String = ""
+            var executed: util.ArrayList[String] = null
+            var translated: String = ""
+            try {
+             val (p,e,t) = Interpreter(provider, parsed, terminal).interprete
+              prompt = p
+              executed = e
+              translated = t
+            }catch{
+              case e: STARException =>
+                terminal.writer().print(writeColor(160,e.getName,terminal))
+                terminal.writer().println(writeInBlue(e.getMessage, terminal))
+                level = false
             }
-            terminal.writer().println(prompt)
-            if(!executed.isEmpty)
-              terminal.writer().println(writeColor(178, executed.toString, terminal))
-            else
-              terminal.writer().println(writeInBlue("No output available please retry", terminal))
+            if level then
+              if(verbose){
+                terminal.writer().println(writeInBlue("Lexed code", terminal))
+                terminal.writer().println(writeColor(178, lexed.toString(), terminal))
+                terminal.writer().println(writeInBlue("Parsed code", terminal))
+                terminal.writer().println(writeColor(178, parsed.toString, terminal))
+                terminal.writer().println(writeInBlue("Translated code", terminal))
+                terminal.writer().println(writeColor(178, translated, terminal))
+                terminal.writer().println(writeInBlue("Execution", terminal))
+                terminal.writer().println("")
+              }
+              terminal.writer().println(prompt)
+              if(!executed.isEmpty)
+                terminal.writer().println(writeColor(178, executed.toString, terminal))
+              else
+                terminal.writer().println(writeInBlue("No output available please retry", terminal))
     }
 
   }
