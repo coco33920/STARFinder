@@ -18,6 +18,16 @@ class AllowTest  extends AnyFunSuite{
     }
   }
 
+  test("Another allow error"){
+    try{
+      Parser(Lexer("allow notanumber").lex()).parse()
+      throw new Exception()
+    }catch{
+      case _: STARException => ()
+      case _: Exception => throw new RuntimeException("Wrong Exception")
+    }
+  }
+
   test("Parsing allow"){
     val is = Parser(Lexer("République to Gares allow 3").lex()).parse()
     val should = Ast(
