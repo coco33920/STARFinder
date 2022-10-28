@@ -1,14 +1,16 @@
-package fr.charlotte
+package fr.charlotte.runtime
 
 import fr.charlotte.ast.{Ast, Parser}
+import fr.charlotte.config.Utils
 import fr.charlotte.lexing.{Lexer, Token}
+import fr.charlotte.runtime.REPL.*
+import fr.charlotte.runtime.{Interpreter, Translator}
+import fr.charlotte.{Provider, STARException, runtime}
 import org.jline.reader.impl.DefaultParser
 import org.jline.reader.impl.completer.StringsCompleter
 import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.AttributedString
-import REPL.*
-import fr.charlotte.runtime.{Interpreter, Translator}
 
 import java.util
 import scala.io.StdIn.readLine
@@ -44,7 +46,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
       .variable(LineReader.INDENTATION, 2)
       .option(LineReader.Option.INSERT_BRACKET, true)
       .build()
-    terminal.writer().println(AttributedString.fromAnsi(s"\u001B[38;5;39mWelcome to STARFinder v${Version.VERSION}, type \u001B[0m\u001B[38;5;219mhelp\u001B[0m\u001B[38;5;39m for help, service provider is \u001B[0m\u001B[38;5;178m${provider.implementationName()}\u001B[0m").toAnsi(terminal))
+    terminal.writer().println(AttributedString.fromAnsi(s"\u001B[38;5;39mWelcome to STARFinder v${Utils.VERSION}, type \u001B[0m\u001B[38;5;219mhelp\u001B[0m\u001B[38;5;39m for help, service provider is \u001B[0m\u001B[38;5;178m${provider.implementationName()}\u001B[0m").toAnsi(terminal))
     while true do {
       val line = lineReader.readLine(writeColor(219, "star-finder ~> ",terminal)).trim
       terminal.flush()
@@ -69,7 +71,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
           continue = false
         case "info" =>
           continue = false
-          terminal.writer().print(writeInBlue(s"STAR-Finder version ${Version.VERSION} made by ", terminal))
+          terminal.writer().print(writeInBlue(s"STAR-Finder version ${Utils.VERSION} made by ", terminal))
           terminal.writer().println(writeColor(178, "Charlotte Thomas @ ISTIC Univ-Rennes1", terminal))
           terminal.writer().print(writeInBlue("You're using the backend provided by ", terminal))
           terminal.writer().println(writeColor(178, provider.implementationName(), terminal))

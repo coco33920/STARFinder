@@ -4,7 +4,7 @@ import fr.charlotte.ast.Ast.Tree.Node
 import fr.charlotte.ast.{Ast, Parameter}
 import fr.charlotte.runtime.Translator
 import fr.charlotte.utils.Utils
-import fr.charlotte.{Provider, REPL}
+import fr.charlotte.Provider
 import org.jline.terminal.Terminal
 
 import java.util

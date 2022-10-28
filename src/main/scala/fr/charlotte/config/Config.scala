@@ -1,9 +1,6 @@
-package fr.charlotte
+package fr.charlotte.config
 
-import org.apache.commons.io.FileUtils
-
-import java.io.{File, FileReader}
-import scala.collection.mutable
+import java.io.File
 
 object Config {
   var f: File = null;
@@ -22,8 +19,8 @@ object Config {
     this.f = file
     val json_string = os.read(os.Path(file.getAbsolutePath))
     try {
-     val _ = ujson.read(json_string)
-    }catch {
+      val _ = ujson.read(json_string)
+    } catch {
       case _: ujson.IncompleteParseException => {
         os.write.append(os.Path(file.getAbsolutePath), "{\"defaultProvider\":\"STAR\"}")
       }
