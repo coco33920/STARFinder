@@ -27,6 +27,7 @@ object REPL {
 
 class REPL(provider: Provider,var verbose: Boolean) {
   def main() : Unit = {
+    provider.load()
     val term = TerminalBuilder.builder()
     val terminal = term.build()
     val lines = provider.exposeAllLines()

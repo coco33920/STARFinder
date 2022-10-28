@@ -2,6 +2,7 @@ package fr.charlotte.providers;
 
 import fr.charlotte.Provider;
 import fr.charlotte.help.DatabaseLite;
+import fr.charlotte.utils.Utils;
 import org.sqlite.SQLiteException;
 
 import java.io.*;
@@ -10,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class STARProvider implements Provider {
@@ -32,8 +35,10 @@ public class STARProvider implements Provider {
     public void configureTables(){
         System.out.println("Configuring database for STAR");
         String first = "create table if not exists rennes_star_lines(id integer constraint id primary key autoincrement ,nomarret text,lignes text);";
+        String s = "create table if not exists star_rennes_connections(id integer constraint id primary key autoincrement, nomlignes text, lignes text);";
         String statements = "create table if not exists star_rennes(id integer constraint id primary key autoincrement, name text, aller_id text, retour_id text, other_ways text);";        try {
             databaseLite.getConnection().prepareStatement(first).execute();
+            databaseLite.getConnection().prepareStatement(s).execute();
             databaseLite.getConnection().prepareStatement(statements).execute();
         } catch (Exception e) {
             System.out.println("Creation of the database failed");
@@ -56,6 +61,7 @@ public class STARProvider implements Provider {
             try {
                 loadFileIntoDatabase("/star/lines.sql");
                 loadFileIntoDatabase("/star/commands.sql");
+                loadFileIntoDatabase("/star/connections.sql");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -112,6 +118,28 @@ public class STARProvider implements Provider {
         ArrayList<String> result = new ArrayList<>();
         s.forEach(s1 -> result.addAll(Arrays.stream(s1.split(";")).toList()));
         return result;
+    }
+
+    public HashMap<String, ArrayList<String>> listOfConnectionsFromLine(String name){
+        String statement = "select lignes from star_rennes_connections where nomlignes=\"" + name + "\"";
+        ArrayList<String> s = uniqueGet(statement);
+        ArrayList<String> result = new ArrayList<>();
+        HashMap<String,ArrayList<String>> map = new HashMap<>();
+        for (String s1 : s) {
+            String[] sl = s1.split(";");
+            for (String l : sl){
+                String[] v = l.split(",");
+                String key = v[0].replace("(", "");
+                String value = v[1].replace(")", "");
+                if(map.containsKey(key)){
+                    map.get(key).add(value);
+                }else{
+                    map.put(key, new ArrayList<>());
+                    map.get(key).add(value);
+                }
+            }
+        }
+        return map;
     }
 
     @Override
