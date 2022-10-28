@@ -6,9 +6,9 @@ import fr.charlotte.ast.Parameter.Type.*
 import fr.charlotte.ast.Parser
 import fr.charlotte.lexing.{Lexer, Token}
 import fr.charlotte.providers.STARProvider
-import fr.charlotte.ast.Translator
 import cats.implicits.*
 import com.monovore.decline.*
+import fr.charlotte.runtime.Translator
 
 
 private var defaultProvider: Provider = null

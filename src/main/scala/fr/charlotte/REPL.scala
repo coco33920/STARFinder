@@ -1,6 +1,6 @@
 package fr.charlotte
 
-import fr.charlotte.ast.{Ast, Interpreter, Parser, Translator}
+import fr.charlotte.ast.{Ast, Parser}
 import fr.charlotte.lexing.{Lexer, Token}
 import org.jline.reader.impl.DefaultParser
 import org.jline.reader.impl.completer.StringsCompleter
@@ -8,6 +8,7 @@ import org.jline.reader.{LineReader, LineReaderBuilder}
 import org.jline.terminal.{Terminal, TerminalBuilder}
 import org.jline.utils.AttributedString
 import REPL.*
+import fr.charlotte.runtime.{Interpreter, Translator}
 
 import java.util
 import scala.io.StdIn.readLine
@@ -103,7 +104,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
             var executed: util.ArrayList[String] = null
             var translated: String = ""
             try {
-             val (p,e,t) = Interpreter(provider, parsed, terminal).interprete
+             val (p,e,t) = runtime.Interpreter(provider, parsed, terminal).interprete
               prompt = p
               executed = e
               translated = t

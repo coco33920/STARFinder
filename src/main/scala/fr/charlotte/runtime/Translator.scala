@@ -1,7 +1,8 @@
-package fr.charlotte.ast
+package fr.charlotte.runtime
 
-import Ast.Tree.*
-import fr.charlotte.Provider
+import fr.charlotte.ast.Ast.Tree.{Leaf, Node, Null}
+import fr.charlotte.ast.{Ast, Parameter}
+
 case class Translator(tablename: String, input: Ast.Tree) {
   def translate: String = {
     this.input match

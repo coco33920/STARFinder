@@ -1,9 +1,8 @@
-package fr.charlotte
-
-import org.scalatest.funsuite.AnyFunSuite
+package fr.charlotte.printing
 
 import fr.charlotte.ast.Parser
 import fr.charlotte.lexing.Lexer
+import org.scalatest.funsuite.AnyFunSuite
 
 class PrintAstTest extends AnyFunSuite {
 

@@ -1,10 +1,9 @@
-package fr.charlotte
-import org.scalatest.funsuite.AnyFunSuite
-import fr.charlotte.ast.Parser
-import fr.charlotte.lexing.Lexer
-import fr.charlotte.ast.Ast
+package fr.charlotte.parsing
+
 import fr.charlotte.ast.Ast.Tree.*
-import fr.charlotte.ast.Parameter
+import fr.charlotte.ast.{Ast, Parameter, Parser}
+import fr.charlotte.lexing.Lexer
+import org.scalatest.funsuite.AnyFunSuite
 class ToTest extends AnyFunSuite {
 
   test("parsing to"){

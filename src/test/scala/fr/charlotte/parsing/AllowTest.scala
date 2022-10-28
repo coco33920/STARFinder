@@ -1,7 +1,9 @@
-package fr.charlotte
-import fr.charlotte.lexing.Lexer
+package fr.charlotte.parsing
+
+import fr.charlotte.STARException
 import fr.charlotte.ast.*
 import fr.charlotte.ast.Ast.Tree.*
+import fr.charlotte.lexing.Lexer
 import org.scalatest.funsuite.AnyFunSuite
 
 class AllowTest  extends AnyFunSuite{
