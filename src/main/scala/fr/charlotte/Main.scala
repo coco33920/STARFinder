@@ -22,6 +22,7 @@ Command architecture
 --verbose => toggle the verbose
 => send to the REPL
 */
+
 object Main extends CommandApp(
   name = "star-finder", header = "Find your bus/metro/tram stops with logic!",
   main = {
@@ -46,7 +47,7 @@ object Main extends CommandApp(
           println("Not implemented yet")
           repl = false
         if (info)
-          println("Version 1.1.1, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend actuel STAR-Rennes")
+          println(s"STARFinder version ${Version.VERSION}, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend for ${defaultProvider.implementationName()}-${defaultProvider.townName()}")
           repl = false
         if (!provider.trim.toLowerCase().equalsIgnoreCase(Config.config("defaultProvider").str.trim)) then
           if verbose then
@@ -61,5 +62,10 @@ object Main extends CommandApp(
     }
   },
 
-  version = "1.1.1"
+  version = Version.VERSION
 )
+
+object Version {
+  val VERSION = "1.2.0-SNAPSHOT"
+}
+

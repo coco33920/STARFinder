@@ -16,6 +16,7 @@ public interface Provider {
     String townName();
     ArrayList<String> executeValue(String endQuest);
     ArrayList<String> exposeAllLines();
+    ArrayList<String> exposeAllStops();
     default File initializeDatabase(){
         String home = System.getProperty("user.home");
         String delimiter = File.separator;

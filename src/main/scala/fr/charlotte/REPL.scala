@@ -27,6 +27,8 @@ class REPL(provider: Provider,var verbose: Boolean) {
     val term = TerminalBuilder.builder()
     val terminal = term.build()
     val lines = provider.exposeAllLines()
+    val stops = provider.exposeAllStops()
+    lines.addAll(stops)
     lines.add("verbose")
     lines.add("info")
     lines.add("exit")
@@ -41,13 +43,15 @@ class REPL(provider: Provider,var verbose: Boolean) {
       .variable(LineReader.INDENTATION, 2)
       .option(LineReader.Option.INSERT_BRACKET, true)
       .build()
-    terminal.writer().println(AttributedString.fromAnsi(s"\u001B[38;5;39mWelcome to STARFinder, type \u001B[0m\u001B[38;5;219mhelp\u001B[0m\u001B[38;5;39m for help, service provider is \u001B[0m\u001B[38;5;178m${provider.implementationName()}\u001B[0m").toAnsi(terminal))
+    terminal.writer().println(AttributedString.fromAnsi(s"\u001B[38;5;39mWelcome to STARFinder v${Version.VERSION}, type \u001B[0m\u001B[38;5;219mhelp\u001B[0m\u001B[38;5;39m for help, service provider is \u001B[0m\u001B[38;5;178m${provider.implementationName()}\u001B[0m").toAnsi(terminal))
     while true do {
       val line = lineReader.readLine(writeColor(219, "star-finder ~> ",terminal)).trim
       terminal.flush()
       var continue = true
       line match
-        case "exit" => System.exit(0)
+        case "exit" =>
+          terminal.writer().println(writeInBlue("~~ Goodbye ~~", terminal))
+          System.exit(0)
         case "help" =>
           terminal.writer().println(writeInBlue("~~ Star-Finder ~~",terminal))
           terminal.writer().print(writeColor(178,"exit : ",terminal))
@@ -64,7 +68,7 @@ class REPL(provider: Provider,var verbose: Boolean) {
           continue = false
         case "info" =>
           continue = false
-          terminal.writer().print(writeInBlue("STAR-Finder version 1.1.1 made by ", terminal))
+          terminal.writer().print(writeInBlue(s"STAR-Finder version ${Version.VERSION} made by ", terminal))
           terminal.writer().println(writeColor(178, "Charlotte Thomas @ ISTIC Univ-Rennes1", terminal))
           terminal.writer().print(writeInBlue("You're using the backend provided by ", terminal))
           terminal.writer().println(writeColor(178, provider.implementationName(), terminal))
