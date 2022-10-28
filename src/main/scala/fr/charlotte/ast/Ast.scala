@@ -21,7 +21,7 @@ case class Ast(tpe: Ast.Tree):
           s.tpe match
             case Parameter.Type.None | Parameter.Type.Argument => v1+v2
             case Parameter.Type.NotOperator => s.print + "(" + v1 + ")"
-            case Parameter.Type.AndOperator | Parameter.Type.OrOperator => "(" + v1 + " " + s.print + " " + v2 + ")"
+            case Parameter.Type.AndOperator | Parameter.Type.OrOperator | Parameter.Type.ToOperator => "(" + v1 + " " + s.print + " " + v2 + ")"
         }
     }
     recursive_print(this.tpe)

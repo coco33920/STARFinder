@@ -14,6 +14,8 @@ object Token:
     case OrOperator
     case AndOperator
     case NotOperator
+    case ToOperator
+    case Quote
     case LPar
     case RPar
     case True
@@ -26,6 +28,23 @@ object Token:
       case "or" => OrOperator
       case "and" => AndOperator
       case "not" => NotOperator
+      case "to" => ToOperator
+      case "\"" => Quote
+      case "->" => ToOperator
       case "true" => True
       case "false" => False
       case _ => Identifier
+  def printToken(t: Token.Type): String =
+    t match
+      case OrOperator => "or"
+      case AndOperator => "and"
+      case NotOperator => "not"
+      case ToOperator => "to"
+      case Quote => "\""
+      case True => "true"
+      case LPar => "("
+      case RPar => ")"
+      case Null => ""
+      case EOF => "<EOF>"
+      case False => "false"
+      case Identifier => ""

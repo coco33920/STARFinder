@@ -10,16 +10,18 @@ object Parameter:
     case OrOperator
     case NotOperator
     case AndOperator
+    case ToOperator
 
   def isAnOperator(t: Parameter.Type): Boolean =
     t match
-      case Type.OrOperator | Type.AndOperator | Type.NotOperator => true
+      case Type.OrOperator | Type.AndOperator | Type.NotOperator | Type.ToOperator => true
       case _ => false
   def fromToken(t: Token.Type): Parameter.Type = {
     t match
       case Token.Type.OrOperator => Type.OrOperator
       case Token.Type.AndOperator => Type.AndOperator
       case Token.Type.NotOperator => Type.NotOperator
+      case Token.Type.ToOperator => Type.ToOperator
       case _ => Type.None
   }
 
@@ -35,3 +37,4 @@ case class Parameter[A](
       case Parameter.Type.OrOperator => "∪"
       case Parameter.Type.AndOperator => "∩"
       case Parameter.Type.NotOperator => "¬"
+      case Parameter.Type.ToOperator => "→"

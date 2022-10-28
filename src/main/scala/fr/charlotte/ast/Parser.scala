@@ -6,6 +6,19 @@ import Ast.Tree.*
 import scala.annotation.tailrec
 
 class Parser(input: List[Token]){
+
+  def parse_string(input: List[Token]): (String,List[Token]) = {
+    @tailrec
+    def aux(input: List[Token], acc: String): (String,List[Token]) = {
+      input match
+        case Token(Token.Type.Quote, _, _)::tail => (acc,tail)
+        case Token(Token.Type.Identifier, text, _)::tail => aux(tail,(acc+" "+text))
+        case Token(t,_,_)::tail => aux(tail, acc+" "+Token.printToken(t))
+        case Nil => (acc,List.empty[Token])
+    }
+    aux(input, "")
+  }
+
   def parse(): Ast =
     def aux(input: List[Token],acc: Ast,lastToken: Token.Type): (Ast,List[Token]) =
       input match
@@ -13,6 +26,12 @@ class Parser(input: List[Token]){
         case i if i.isEmpty => (acc,List.empty[Token])
         case Token(Token.Type.RPar,_,_)::tail => (acc,tail)
         case Token(Token.Type.EOF,_,_)::_ => (acc,List.empty[Token])
+
+        case Token(Token.Type.Quote,_,_)::tail =>
+          val (str,t) = parse_string(tail)
+          val a = Ast.Tree.Leaf[String](Parameter(Parameter.Type.Argument,str))
+          val ast = acc.injectValue(a)
+          aux(t,ast,Token.Type.Quote)
 
         //recursive
         case Token(Token.Type.LPar,_,_)::tail =>
@@ -34,6 +53,10 @@ class Parser(input: List[Token]){
         case Token(Token.Type.OrOperator,_,_)::tail =>
           val ast = acc.applyOperator(Token.Type.OrOperator)
           aux(tail,ast,Token.Type.OrOperator)
+
+        case Token(Token.Type.ToOperator,_,_)::tail =>
+          val ast = acc.applyOperator(Token.Type.ToOperator)
+          aux(tail, ast, Token.Type.ToOperator)
 
         case Token(Token.Type.NotOperator,_,_)::tail =>
           aux(tail,acc,Token.Type.NotOperator)

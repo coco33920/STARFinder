@@ -14,6 +14,9 @@ object Lexer:
   def isNotOperator(input: Char): Boolean =
     (input == '!') || (input == '¬')
 
+  def isToOperator(input: Char): Boolean =
+    (input == '→')
+
 class Lexer(input: String){
   var currentPos = 0
   var token: mutable.ArrayBuffer[Token] = mutable.ArrayBuffer.empty[Token]
@@ -30,6 +33,10 @@ class Lexer(input: String){
     else if Lexer.isNotOperator(nextChar) then
       currentPos += 1
       token += Token(NotOperator, nextChar.toString, tokenStartPos)
+      true
+    else if Lexer.isToOperator(nextChar) then
+      currentPos += 1
+      token += Token(ToOperator, nextChar.toString, tokenStartPos)
       true
     else
       false
@@ -69,6 +76,9 @@ class Lexer(input: String){
       else if lexOperators(nextChar, tokenStartPos) then ()
       else if lexParenthesis(nextChar,tokenStartPos) then ()
       else if lexString(nextChar,tokenStartPos) then ()
+      else if nextChar == '"' then
+        currentPos += 1
+        token += Token(Token.Type.Quote, "", tokenStartPos)
       else
         throw RuntimeException(s"Unknown character $nextChar at position $currentPos")
 
