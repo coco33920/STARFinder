@@ -82,4 +82,16 @@ class ParserTests extends AnyFunSuite{
     assert(result == should)
   }
 
+  test("To Test"){
+    val res = Parser(Lexer("\"République\" → \"Gares\"").lex()).parse()
+    val should = Ast(
+      Node(
+        Parameter(Parameter.Type.ToOperator, ""),
+        Leaf[String](Parameter(Parameter.Type.Argument, "République")),
+        Leaf[String](Parameter(Parameter.Type.Argument, "Gares"))
+      )
+    )
+    assert(res == should)
+  }
+
 }

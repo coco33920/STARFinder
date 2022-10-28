@@ -34,7 +34,7 @@ class LexerTest extends AnyFunSuite:
     assert(result == should)
   }
   test("UnicodeTest"){
-    val result = Lexer("∩∪¬").lex()
+    val result = Lexer("∩∪¬→").lex()
     val should = List(Token(
       tpe=Token.Type.AndOperator,
       text = "∩",
@@ -48,9 +48,14 @@ class LexerTest extends AnyFunSuite:
       text="¬",
       startPos = 2
     ),Token(
+      tpe = Token.Type.ToOperator,
+      text="→",
+      startPos = 3
+    ),
+      Token(
       tpe=Token.Type.EOF,
       text="<EOF>",
-      startPos = 3
+      startPos = 4
     ))
     assert(result == should)
   }
