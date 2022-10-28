@@ -11,10 +11,10 @@ class Parser(input: List[Token]){
     @tailrec
     def aux(input: List[Token], acc: String): (String,List[Token]) = {
       input match
-        case Token(Token.Type.Quote, _, _)::tail => (acc,tail)
+        case Token(Token.Type.Quote, _, _)::tail => (acc.trim,tail)
         case Token(Token.Type.Identifier, text, _)::tail => aux(tail,(acc+" "+text))
         case Token(t,_,_)::tail => aux(tail, acc+" "+Token.printToken(t))
-        case Nil => (acc,List.empty[Token])
+        case Nil => (acc.trim,List.empty[Token])
     }
     aux(input, "")
   }

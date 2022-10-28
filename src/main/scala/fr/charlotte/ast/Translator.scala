@@ -1,9 +1,8 @@
 package fr.charlotte.ast
 
 import Ast.Tree.*
-
+import fr.charlotte.Provider
 case class Translator(tablename: String, input: Ast.Tree) {
-
   def translate: String = {
     this.input match
       case Null => ""
@@ -23,7 +22,8 @@ case class Translator(tablename: String, input: Ast.Tree) {
           => s"(${Translator(tablename, tree).translate} AND ${Translator(tablename, tree1).translate})"
           case Parameter.Type.NotOperator
           => s"(NOT ${Translator(tablename, tree).translate})"
+          case _ => "Error"
         }
-      case _ => ""
+      case _ => "Error"
   }
 }

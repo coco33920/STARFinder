@@ -1,8 +1,7 @@
 package fr.charlotte
 
-import fr.charlotte.ast.Translator
+import fr.charlotte.ast.{Interpreter, Parser, Translator}
 import fr.charlotte.lexing.{Lexer, Token}
-import fr.charlotte.ast.Parser
 import org.jline.reader.impl.DefaultParser
 import org.jline.reader.impl.completer.StringsCompleter
 import org.jline.reader.{LineReader, LineReaderBuilder}
@@ -72,19 +71,18 @@ class REPL(provider: Provider,var verbose: Boolean) {
       if continue then
         val lexed = Lexer(line).lex()
         val parsed = Parser(lexed).parse()
-        //val translated = Translator(provider.tableName(), parsed.tpe).translate
-        //val executed = provider.executeValue(translated)
+        val (executed,translated) = Interpreter(provider,parsed).interprete
         if(verbose){
           terminal.writer().println(writeInBlue("Lexed code", terminal))
           terminal.writer().println(writeColor(178, lexed.toString(), terminal))
           terminal.writer().println(writeInBlue("Parsed code", terminal))
           terminal.writer().println(writeColor(178, parsed.toString, terminal))
           terminal.writer().println(writeInBlue("Translated code", terminal))
-          //terminal.writer().println(writeColor(178, translated, terminal))
+          terminal.writer().println(writeColor(178, translated, terminal))
         }
         terminal.writer().print(writeInBlue("Bus stops obeying the rule : ", terminal))
         terminal.writer().println(writeColor(178, parsed.print(), terminal))
-        //terminal.writer().println(writeColor(178, executed.toString, terminal))
+        terminal.writer().println(writeColor(178, executed.toString, terminal))
     }
 
   }
