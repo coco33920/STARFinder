@@ -1,9 +1,9 @@
 package fr.charlotte
 import fr.charlotte.lexing.Lexer
-import fr.charlotte.ast.Parser
+import fr.charlotte.ast.*
+import fr.charlotte.ast.Ast.Tree.*
 import org.scalatest.funsuite.AnyFunSuite
 
-import java.sql.SQLException
 class AllowTest  extends AnyFunSuite{
 
   test("Error with allow"){
@@ -16,6 +16,16 @@ class AllowTest  extends AnyFunSuite{
       case _: Exception =>
         throw new RuntimeException("Wrong Exception")
     }
+  }
+
+  test("Parsing allow"){
+    val is = Parser(Lexer("République to Gares allow 3").lex()).parse()
+    val should = Ast(
+      Node(Parameter(Parameter.Type.ToOperator, 3),
+        Leaf[String](Parameter(Parameter.Type.Argument, "République")),
+        Leaf[String](Parameter(Parameter.Type.Argument, "Gares")))
+    )
+    assert(is == should)
   }
 
 
