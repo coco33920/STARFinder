@@ -6,11 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface Provider {
     void update();
     ArrayList<String> listOfLinesFromStopName(String name);
     ArrayList<String> listOfStopsFromLineName(String name);
+    HashMap<String,ArrayList<String>> listOfConnectionsFromLine(String name);
     String implementationName();
     String tableName();
     String townName();

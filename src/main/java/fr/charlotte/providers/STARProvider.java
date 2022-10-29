@@ -120,6 +120,7 @@ public class STARProvider implements Provider {
         return result;
     }
 
+    @Override
     public HashMap<String, ArrayList<String>> listOfConnectionsFromLine(String name){
         String statement = "select lignes from star_rennes_connections where nomlignes=\"" + name + "\"";
         ArrayList<String> s = uniqueGet(statement);

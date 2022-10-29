@@ -16,6 +16,29 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
   A not dumb graph searching algorithm to connect the dots, you can do it charlotte :)
   */
 
+  def connection(start: String, stop: String): String = {
+    val startLines = provider.listOfLinesFromStopName(start)
+    val stopLines = provider.listOfLinesFromStopName(stop)
+    val intersect = Utils.intersectArrayList(startLines,stopLines)
+
+    if(!intersect.isEmpty)
+      var s = REPL.writeInBlue("There is direct connections from ",terminal)
+      s += REPL.writeColor(178,start,terminal)
+      s += REPL.writeInBlue(" to ",terminal)
+      s += REPL.writeColor(178,stop,terminal)
+      s += REPL.writeInBlue(" with lines ",terminal)
+      val builder = String.join(",", intersect)
+      s += REPL.writeColor(178,builder,terminal)
+      return s
+    //TODO: do smart things
+    var s = REPL.writeInBlue("There is no direct connections between ",terminal)
+    s += REPL.writeColor(178, start, terminal)
+    s += REPL.writeInBlue(" and ", terminal)
+    s += REPL.writeColor(178, stop, terminal)
+    s
+  }
+
+
   //It's dumb: allow 0
   def executeToOperators(s: String, s2: String): String = {
     val a1 = provider.listOfLinesFromStopName(s)
@@ -25,12 +48,7 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
     else if a2.isEmpty then
       REPL.writeInBlue(s"There is no line attached to the name ${REPL.writeColor(178, s2, terminal)}", terminal)
     else
-      val arr = Utils.intersectArrayList(a1, a2)
-      if arr.isEmpty then
-        REPL.writeInBlue(s"There is no direct connections between ${REPL.writeColor(178, s, terminal)} ${REPL.writeInBlue("and", terminal)} ${REPL.writeColor(178, s2, terminal)}", terminal)
-      else
-        val builder = String.join(",", arr)
-        REPL.writeInBlue(s"To go from ${REPL.writeColor(178, s, terminal)} ${REPL.writeInBlue("to", terminal)} ${REPL.writeColor(178, s2, terminal)} ${REPL.writeInBlue("you can take the following lines", terminal)} ${REPL.writeColor(178, builder, terminal)}", terminal)
+      connection(s,s2)
   }
 
   def unpackageToOperator(s1: Ast.Tree, s2: Ast.Tree): String = {
