@@ -57,7 +57,8 @@ class Parser(input: List[Token]){
 
         case Token(Token.Type.ToOperator,_,_)::tail =>
           val ast = acc.applyOperator(Token.Type.ToOperator)
-          aux(tail, ast, Token.Type.ToOperator)
+          val a = ast.injectToAllow(0)
+          aux(tail, a, Token.Type.ToOperator)
 
         case Token(Token.Type.NotOperator,_,_)::tail =>
           aux(tail,acc,Token.Type.NotOperator)

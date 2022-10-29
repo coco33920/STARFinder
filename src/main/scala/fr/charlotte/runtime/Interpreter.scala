@@ -7,7 +7,9 @@ import fr.charlotte.utils.Utils
 import fr.charlotte.Provider
 import org.jline.terminal.Terminal
 
+import scala.jdk.CollectionConverters.*
 import java.util
+import scala.util.control.Breaks.break
 
 case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
 
@@ -16,7 +18,7 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
   A not dumb graph searching algorithm to connect the dots, you can do it charlotte :)
   */
 
-  def connection(start: String, stop: String): String = {
+  def connection(start: String, stop: String, maxDepth: Int): String = {
     val startLines = provider.listOfLinesFromStopName(start)
     val stopLines = provider.listOfLinesFromStopName(stop)
     val intersect = Utils.intersectArrayList(startLines,stopLines)
@@ -31,16 +33,40 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       s += REPL.writeColor(178,builder,terminal)
       return s
     //TODO: do smart things
-    var s = REPL.writeInBlue("There is no direct connections between ",terminal)
-    s += REPL.writeColor(178, start, terminal)
-    s += REPL.writeInBlue(" and ", terminal)
-    s += REPL.writeColor(178, stop, terminal)
-    s
+    var results = List.empty[List[String]]
+    var minDepthFound = maxDepth + 1;
+    def test(s: util.Stack[String],depth: Int,acc: List[String]): Unit = {
+      if(depth > maxDepth){
+        return ()
+      }
+      if(depth > minDepthFound){
+        return ()
+      }
+      while(!s.empty()){
+        val p = s.pop();
+        val lines = provider.listOfConnectionsFromLine(p)
+        val line = lines.asScala
+        for((l,_) <- line){
+          if(stopLines.contains(l))
+            println(s"Found a connection! ${(l::p::acc).toString()}")
+            minDepthFound = (l::p::acc).length
+            results = (l::p::acc)::results
+          else
+            val s = util.Stack[String]()
+            s.add(l)
+            test(s,(depth+1),l::p::acc)
+        }
+      }
+    }
+    val stack = util.Stack[String]()
+    stack.addAll(startLines)
+    test(stack,0,List.empty[String]);
+    results.toString();
   }
 
 
   //It's dumb: allow 0
-  def executeToOperators(s: String, s2: String): String = {
+  def executeToOperators(s: String, s2: String,maxDepth: Int): String = {
     val a1 = provider.listOfLinesFromStopName(s)
     val a2 = provider.listOfLinesFromStopName(s2)
     if a1.isEmpty then
@@ -48,21 +74,21 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
     else if a2.isEmpty then
       REPL.writeInBlue(s"There is no line attached to the name ${REPL.writeColor(178, s2, terminal)}", terminal)
     else
-      connection(s,s2)
+      connection(s,s2,maxDepth)
   }
 
-  def unpackageToOperator(s1: Ast.Tree, s2: Ast.Tree): String = {
+  def unpackageToOperator(s1: Ast.Tree, s2: Ast.Tree,maxDepth: Int): String = {
     (s1, s2) match
       case (Ast.Tree.Leaf(Parameter(Parameter.Type.Argument, body)), Ast.Tree.Leaf(Parameter(Parameter.Type.Argument, body1)))
-      => executeToOperators(body.toString, body1.toString)
+      => executeToOperators(body.toString, body1.toString,maxDepth)
       case _ => REPL.writeColor(178, "TO ", terminal) + REPL.writeInBlue("operator only works between two strings!", terminal)
   }
 
   def interprete: (String, util.ArrayList[String], String) = {
     ast.tpe match
-      case Node(Parameter(Parameter.Type.ToOperator, _), s1: Ast.Tree, s2: Ast.Tree)
+      case Node(Parameter(Parameter.Type.ToOperator, body: Int), s1: Ast.Tree, s2: Ast.Tree)
       =>
-        val s = unpackageToOperator(s1, s2)
+        val s = unpackageToOperator(s1, s2,body)
         (s, new util.ArrayList[String](), s)
       case tpe =>
         val t = Translator(provider.tableName(), tpe).translate
