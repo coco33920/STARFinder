@@ -128,17 +128,6 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       =>
         val s = unpackageToOperator(s1, s2, body)
         (s, new util.ArrayList[String](), s)
-      case Node(Parameter(tpe,body:Int),s1:Ast.Tree,s2:Ast.Tree)
-      =>
-        val t = Translator(provider.tableName(),Node(Parameter(tpe,body),s1,s2)).translate
-        val prompt = REPL.writeInBlue("Bus stops obeying the rule : ",terminal) + REPL.writeColor(178,ast.print(),terminal)
-        val value = provider.executeValue(t)
-        val v = util.ArrayList[String]()
-        for(i <- 0 until (value.size())){
-          if(i<body)
-            v.add(value.get(i))
-        }
-        (prompt,v,t)
       case tpe =>
         val t = Translator(provider.tableName(), tpe).translate
         val prompt = REPL.writeInBlue("Bus stops obeying the rule : ", terminal) + REPL.writeColor(178, ast.print(), terminal)

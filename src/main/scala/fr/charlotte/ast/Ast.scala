@@ -3,6 +3,7 @@ package fr.charlotte.ast
 import fr.charlotte.STARException
 import fr.charlotte.lexing.Token
 import fr.charlotte.ast.Parameter
+import fr.charlotte.runtime.Translator
 
 object Ast:
   enum Tree:
@@ -12,17 +13,26 @@ object Ast:
 
 case class Ast(tpe: Ast.Tree):
 
+  def printBody(body: Any): String = {
+    if(body.toString.trim.equalsIgnoreCase("")) then
+      return ""
+    if Translator.isInteger(body.toString) then
+      s"show ${body.toString}"
+    else
+      ""
+  }
+
   def print(): String = {
     def recursive_print(b: Ast.Tree): String = {
       b match
         case Ast.Tree.Null => ""
         case Ast.Tree.Leaf(s:Parameter[_]) => s.print
-        case Ast.Tree.Node(s:Parameter[_],s1: Ast.Tree, s2: Ast.Tree) => {
+        case Ast.Tree.Node(Parameter(stpe,body),s1: Ast.Tree, s2: Ast.Tree) => {
           val (v1,v2) = (recursive_print(s1),recursive_print(s2))
-          s.tpe match
+          stpe match
             case Parameter.Type.None | Parameter.Type.Argument => v1+v2
-            case Parameter.Type.NotOperator => s.print + "(" + v1 + ")"
-            case Parameter.Type.AndOperator | Parameter.Type.OrOperator | Parameter.Type.ToOperator => "(" + v1 + " " + s.print + " " + v2 + ")"
+            case Parameter.Type.NotOperator => (Parameter(stpe,body)).print + "(" + v1 + s") ${printBody(body)}".trim
+            case Parameter.Type.AndOperator | Parameter.Type.OrOperator | Parameter.Type.ToOperator => "(" + v1 + " " + (Parameter(stpe,body)).print + " " + v2 + s") ${printBody(body)}".trim
         }
     }
     recursive_print(this.tpe)
@@ -45,15 +55,15 @@ case class Ast(tpe: Ast.Tree):
           case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
       case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
   }
-  
+
   def injectShow(i: Int): Ast = {
     this.tpe match
       case Ast.Tree.Node(s:Parameter[_],s1:Ast.Tree,s2:Ast.Tree) =>
-        if Parameter.isAnOperator(s.tpe) then 
+        if Parameter.isAnOperator(s.tpe) then
           Ast(Ast.Tree.Node(Parameter[Int](s.tpe,i),s1,s2))
         else
           throw new STARException("Syntax Error", "Error while parsing, you should use show after an operator")
-      case _ => throw new STARException("Syntax Error", "Error while parsing you should use show after an operator")    
+      case _ => throw new STARException("Syntax Error", "Error while parsing you should use show after an operator")
   }
 
   def applyNotOperator(): Ast = {
