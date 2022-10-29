@@ -77,8 +77,13 @@ and naturally you can mix and match if you want for example
 * `(C1 or C2) & b`
 * etc.
 
-### Calculating paths
-You can calculate paths with the `to` operator
+### Finding paths between stops
+You can find paths between two stops with the `to` operator, which can be written `->` or `→`, and the
+`allow` keywords specify how many hops you are keen to take, by default it is `0̀` (so a direct connection)
+example of usage
+
+* `Républiques → Gares`
+* `Gares → Tournebride allow 1`
 
 ## The Providers (not implemented  yet)
 Java is used to provide an API in the form of an interface, that can 
