@@ -37,6 +37,7 @@ object Token:
       case "false" => False
       case "allow" => AllowKeyword
       case "show" => ShowKeyword
+      case "<<" => ShowKeyword
       case _ => Identifier
   def printToken(t: Token.Type): String =
     t match
