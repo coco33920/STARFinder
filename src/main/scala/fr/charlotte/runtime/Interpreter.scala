@@ -34,11 +34,10 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       val builder = String.join(",", intersect)
       s += REPL.writeColor(178, builder, terminal)
       return s
-    //TODO: do smart things
+
     def calculate(line: String, acc: List[(String,String)], depth: Int): List[(String,String)] = {
       if (depth > maxDepth)
         return List.empty[(String,String)]
-      println(s"Calculating line ${line}, currents hops ${acc.toString()}, current depth ${depth}")
       val list_of_stops = provider.listOfStopsFromLineName(line)
       val list_of_connections = provider.listOfConnectionsFromLine(line)
       if (list_of_stops.contains(end)) then {
@@ -64,20 +63,14 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
           List.empty[(String,String)]
         else
           val ret = res.map(l => (line,l.reverse.mkString(";")))
-          res.foreach(println)
           ret
       }
     }
 
     val list_of_path = startLines.asScala.map(f => (calculate(f, List.empty[(String,String)], 0)))
 
-    //Prend Liste: (LIGNE,(MACHIN,TRUC);(MACHIN2,TRUC2)),(LIGNE,(MACHIN,TRUC);(MACHIN2;TRUC2))
-    //Renvoie
-    //LIGNE DÉPART => MACHIN TRUC => MACHIN2 TRUC \n
-    //LIGNE DÉPART => MACHIN TRUC => MACHIN2 TRUC
-
     def calculatePathForASingleTuple(ligne: String,hops: String): String = {
-      val s: Array[String] = hops.split(";") //(Array (MACHIN,TRUC),(MACHIN2,TRUC2)
+      val s: Array[String] = hops.split(";")
       val t: Array[(String,String)] =
       s.map(elem => {
         val v = elem.split(",")

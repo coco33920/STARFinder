@@ -1,4 +1,4 @@
-ThisBuild / version := "1.2.0"
+ThisBuild / version := "1.2.1"
 
 ThisBuild / scalaVersion := "3.2.0"
 assembly / mainClass := Some("fr.charlotte.STARFinder")
