@@ -39,6 +39,8 @@ class REPL(provider: Provider,var verbose: Boolean) {
     lines.add("or")
     lines.add("and")
     lines.add("not")
+    lines.add("to")
+    lines.add("allow")
     val completer = StringsCompleter(lines)
     val lineReader = LineReaderBuilder.builder()
       .terminal(terminal)
