@@ -1,14 +1,10 @@
-package fr.charlotte
+package fr.charlotte.parsing
 
-
-import org.scalatest.funsuite.AnyFunSuite
-import fr.charlotte.lexing.Lexer
-import fr.charlotte.lexing.Token
-import fr.charlotte.ast.Parser
-import fr.charlotte.ast.Ast
 import fr.charlotte.ast.Ast.Tree.*
-import fr.charlotte.ast.Parameter
 import fr.charlotte.ast.Parameter.Type.*
+import fr.charlotte.ast.{Ast, Parameter, Parser}
+import fr.charlotte.lexing.{Lexer, Token}
+import org.scalatest.funsuite.AnyFunSuite
 
 class ParserTests extends AnyFunSuite{
   test("Simple command test"){
@@ -80,6 +76,18 @@ class ParserTests extends AnyFunSuite{
       )
     )
     assert(result == should)
+  }
+
+  test("To Test"){
+    val res = Parser(Lexer("\"République\" → \"Gares\"").lex()).parse()
+    val should = Ast(
+      Node(
+        Parameter(Parameter.Type.ToOperator, 0),
+        Leaf[String](Parameter(Parameter.Type.Argument, "République")),
+        Leaf[String](Parameter(Parameter.Type.Argument, "Gares"))
+      )
+    )
+    assert(res == should)
   }
 
 }

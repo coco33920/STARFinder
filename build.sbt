@@ -1,7 +1,7 @@
-ThisBuild / version := "1.1.1"
+ThisBuild / version := "1.2.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "3.2.0"
-assembly / mainClass := Some("fr.charlotte.Main")
+assembly / mainClass := Some("fr.charlotte.STARFinder")
 assembly / assemblyJarName := "star-finder.jar"
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.14" % Test,

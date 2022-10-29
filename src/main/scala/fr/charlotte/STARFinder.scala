@@ -6,13 +6,10 @@ import fr.charlotte.ast.Parameter.Type.*
 import fr.charlotte.ast.Parser
 import fr.charlotte.lexing.{Lexer, Token}
 import fr.charlotte.providers.STARProvider
-import fr.charlotte.ast.Translator
 import cats.implicits.*
 import com.monovore.decline.*
-
-
-private var defaultProvider: Provider = null
-def getDefaultProvider: Provider = defaultProvider
+import fr.charlotte.config.{Config, Utils}
+import fr.charlotte.runtime.{REPL, Translator}
 
 /*
 Command architecture
@@ -22,7 +19,8 @@ Command architecture
 --verbose => toggle the verbose
 => send to the REPL
 */
-object Main extends CommandApp(
+
+object STARFinder extends CommandApp(
   name = "star-finder", header = "Find your bus/metro/tram stops with logic!",
   main = {
     val providerOpt: Opts[String] = Opts.option[String]("provider", help = "Which provider to choose from").withDefault("star")
@@ -36,17 +34,17 @@ object Main extends CommandApp(
         Config.init()
         Config.initConfig()
         Config.config("defaultProvider").str.trim match
-          case "STAR" => defaultProvider = STARProvider()
+          case "STAR" => Utils.setDefaultProvider(STARProvider())
           case e => {
             if verbose then
               println("The backend for " + e + " is not implemented yet, defaulting to STAR")
-            defaultProvider = STARProvider()
+            Utils.setDefaultProvider(STARProvider())
           }
         if (update)
           println("Not implemented yet")
           repl = false
         if (info)
-          println("Version 1.1.1, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend actuel STAR-Rennes")
+          println(s"STARFinder version ${Utils.VERSION}, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend for ${Utils.getDefaultProvider.implementationName()}-${Utils.getDefaultProvider.townName()}")
           repl = false
         if (!provider.trim.toLowerCase().equalsIgnoreCase(Config.config("defaultProvider").str.trim)) then
           if verbose then
@@ -57,9 +55,10 @@ object Main extends CommandApp(
           case "rennes" => repl = true
           case _ => if verbose then println("Backend currently supported : STAR/Rennes") else ()
         if (repl)
-          REPL(getDefaultProvider, verbose).main()
+          REPL(Utils.getDefaultProvider, verbose).main()
     }
   },
 
-  version = "1.1.1"
+  version = Utils.VERSION
 )
+

@@ -1,18 +1,27 @@
 package fr.charlotte.lexing
 
 import Token.Type.*
+import fr.charlotte.STARException
+import fr.charlotte.lexing.Lexer.isAnAllowedCharacter
 
 import scala.collection.mutable
 
 object Lexer:
+
+  def isAnAllowedCharacter(input: Char): Boolean =
+    input.isLetterOrDigit || input == '>' || input == '-'
+
   def isAndOperator(input: Char): Boolean =
-    (input == '&') || (input == '∩') || (input == '-')
+    (input == '&') || (input == '∩')
 
   def isOrOperator(input: Char): Boolean =
     (input == '|') || (input == '∪') || (input == '+')
 
   def isNotOperator(input: Char): Boolean =
     (input == '!') || (input == '¬')
+
+  def isToOperator(input: Char): Boolean =
+    (input == '→')
 
 class Lexer(input: String){
   var currentPos = 0
@@ -31,6 +40,10 @@ class Lexer(input: String){
       currentPos += 1
       token += Token(NotOperator, nextChar.toString, tokenStartPos)
       true
+    else if Lexer.isToOperator(nextChar) then
+      currentPos += 1
+      token += Token(ToOperator, nextChar.toString, tokenStartPos)
+      true
     else
       false
 
@@ -47,9 +60,9 @@ class Lexer(input: String){
       false
 
   def lexString(nextChar: Char, tokenStartPos: Int): Boolean =
-    if nextChar.isDigit || nextChar.isLetter then
+    if isAnAllowedCharacter(nextChar) then
       var text = ""
-      while currentPos < input.length && input(currentPos).isLetterOrDigit do
+      while currentPos < input.length && (isAnAllowedCharacter(input(currentPos))) do
         text += input(currentPos)
         currentPos += 1
       val tpe = Token.stringToTokenType(text)
@@ -69,8 +82,11 @@ class Lexer(input: String){
       else if lexOperators(nextChar, tokenStartPos) then ()
       else if lexParenthesis(nextChar,tokenStartPos) then ()
       else if lexString(nextChar,tokenStartPos) then ()
+      else if nextChar == '"' then
+        currentPos += 1
+        token += Token(Token.Type.Quote, "", tokenStartPos)
       else
-        throw RuntimeException(s"Unknown character $nextChar at position $currentPos")
+        throw new STARException("Lexing Error",s"Lexing cannot complete, unknown character ${input(currentPos)} at position ${currentPos}")
 
     token += Token(EOF, "<EOF>", currentPos)
     token.toList

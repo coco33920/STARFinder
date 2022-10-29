@@ -1,8 +1,7 @@
-package fr.charlotte
+package fr.charlotte.lexing
 
+import fr.charlotte.lexing.{Lexer, Token}
 import org.scalatest.funsuite.AnyFunSuite
-import fr.charlotte.lexing.Lexer
-import fr.charlotte.lexing.Token
 class LexerTest extends AnyFunSuite:
   test("OrTest"){
     val result = Lexer("(C1 or C2)").lex()
@@ -34,7 +33,7 @@ class LexerTest extends AnyFunSuite:
     assert(result == should)
   }
   test("UnicodeTest"){
-    val result = Lexer("∩∪¬").lex()
+    val result = Lexer("∩∪¬→").lex()
     val should = List(Token(
       tpe=Token.Type.AndOperator,
       text = "∩",
@@ -48,9 +47,14 @@ class LexerTest extends AnyFunSuite:
       text="¬",
       startPos = 2
     ),Token(
+      tpe = Token.Type.ToOperator,
+      text="→",
+      startPos = 3
+    ),
+      Token(
       tpe=Token.Type.EOF,
       text="<EOF>",
-      startPos = 3
+      startPos = 4
     ))
     assert(result == should)
   }

@@ -1,8 +1,8 @@
-package fr.charlotte
-import org.scalatest.funsuite.AnyFunSuite
+package fr.charlotte.printing
 
 import fr.charlotte.ast.Parameter
 import fr.charlotte.ast.Parameter.Type.*
+import org.scalatest.funsuite.AnyFunSuite
 
 class PrintParameterTest extends AnyFunSuite {
 

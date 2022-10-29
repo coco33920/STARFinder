@@ -1,9 +1,9 @@
-package fr.charlotte.ast
+package fr.charlotte.runtime
 
-import Ast.Tree.*
+import fr.charlotte.ast.Ast.Tree.{Leaf, Node, Null}
+import fr.charlotte.ast.{Ast, Parameter}
 
 case class Translator(tablename: String, input: Ast.Tree) {
-
   def translate: String = {
     this.input match
       case Null => ""
@@ -23,7 +23,8 @@ case class Translator(tablename: String, input: Ast.Tree) {
           => s"(${Translator(tablename, tree).translate} AND ${Translator(tablename, tree1).translate})"
           case Parameter.Type.NotOperator
           => s"(NOT ${Translator(tablename, tree).translate})"
+          case _ => throw new RuntimeException("Parameter error in translation, cannot complete")
         }
-      case _ => ""
+      case _ => throw new RuntimeException("Parameter error in translation, cannot complete")
   }
 }
