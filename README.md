@@ -43,6 +43,7 @@ java -jar target/scala-3.2.0 snapshot.jar <arguments>
 ```
 
 ## The Language
+### Finding bus stops
 The main part of the Scala part of the project is to lex and parse a little 
 language to construct the commands, it supports unicode for multiple way to create the 
 command for example
@@ -75,6 +76,9 @@ and naturally you can mix and match if you want for example
 * `(C1 | C2) ∩ b`
 * `(C1 or C2) & b`
 * etc.
+
+### Calculating paths
+You can calculate paths with the `to` operator
 
 ## The Providers (not implemented  yet)
 Java is used to provide an API in the form of an interface, that can 
