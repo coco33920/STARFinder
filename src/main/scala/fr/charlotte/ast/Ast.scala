@@ -45,6 +45,16 @@ case class Ast(tpe: Ast.Tree):
           case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
       case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
   }
+  
+  def injectShow(i: Int): Ast = {
+    this.tpe match
+      case Ast.Tree.Node(s:Parameter[_],s1:Ast.Tree,s2:Ast.Tree) =>
+        if Parameter.isAnOperator(s.tpe) then 
+          Ast(Ast.Tree.Node(Parameter[Int](s.tpe,i),s1,s2))
+        else
+          throw new STARException("Syntax Error", "Error while parsing, you should use show after an operator")
+      case _ => throw new STARException("Syntax Error", "Error while parsing you should use show after an operator")    
+  }
 
   def applyNotOperator(): Ast = {
     Ast(

@@ -18,6 +18,7 @@ object Token:
     case Quote
     case LPar
     case RPar
+    case ShowKeyword
     case True
     case False
     case EOF
@@ -35,6 +36,7 @@ object Token:
       case "true" => True
       case "false" => False
       case "allow" => AllowKeyword
+      case "show" => ShowKeyword
       case _ => Identifier
   def printToken(t: Token.Type): String =
     t match
@@ -48,6 +50,7 @@ object Token:
       case RPar => ")"
       case Null => ""
       case EOF => "<EOF>"
+      case ShowKeyword => "show"
       case False => "false"
       case AllowKeyword => "allow"
       case Identifier => ""

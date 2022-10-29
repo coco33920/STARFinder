@@ -28,6 +28,7 @@ class Parser(input: List[Token]){
         case Token(Token.Type.RPar,_,_)::tail => (acc,tail)
         case Token(Token.Type.EOF,_,_)::_ => (acc,List.empty[Token])
         case Token(Token.Type.AllowKeyword,_,_)::tail => aux(tail,acc,Token.Type.AllowKeyword)
+        case Token(Token.Type.ShowKeyword,_,_)::tail => aux(tail,acc,Token.Type.ShowKeyword)
         case Token(Token.Type.Quote,_,_)::tail =>
           val (str,t) = parse_string(tail)
           val a = Ast.Tree.Leaf[String](Parameter(Parameter.Type.Argument,str))
@@ -72,9 +73,18 @@ class Parser(input: List[Token]){
               try{
                 v = Integer.parseInt(text)
               }catch {
-                case _: Exception => throw new STARException("Syntax Error","Parsing could not finish, allow should not be used with non-integers")
+                case _: Exception => throw new STARException("Syntax Error","Parsing could not finish, allow should be used with an integer")
               }
               val ast = acc.injectToAllow(v)
+              aux(tail,ast,Token.Type.Identifier)
+            case Token.Type.ShowKeyword =>
+              var v = 0
+              try{
+                v = Integer.parseInt(text)
+              }catch{
+                case _: Exception => throw new STARException("Syntax Error","Parsing could not finish, show should be used with an integer")
+              }
+              val ast = acc.injectShow(v)
               aux(tail,ast,Token.Type.Identifier)
             case Token.Type.NotOperator =>
               val n_val = Ast(value).applyNotOperator()
