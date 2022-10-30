@@ -77,6 +77,19 @@ and naturally you can mix and match if you want for example
 * `(C1 or C2) & b`
 * etc.
 
+### Keywords
+The language have three keywords, two uses int as parameters
+* `allow <int>` ([see](#finding-paths-between-stops)) specify to the interpreter how many "hops" or 
+intermediary stops you're keen to take to find a path between two stops (warning, a huge number means a `lot` of possible connections)
+you can also use `@ <int>` which is the same keyword
+* `show <int>` is used after a logical command ([see](#finding-bus-stops)) like `C1 or C2 show 5` to limit the number of lines printed to `5` 
+you can also use `limit <int>` or `<< <int>` which are the same keyword
+
+The last one take a string as parameter
+* `using <str>` takes a string as a list of lines, like `using C1,a` and limits the starting lines for the `to` operators
+
+All keywords can be used in whatever order you like it doesn't matter 
+
 ### Finding paths between stops
 You can find paths between two stops with the `to` operator, which can be written `->` or `→`, and the
 `allow` keywords specify how many hops you are keen to take, by default it is `0̀` (so a direct connection)
