@@ -126,7 +126,9 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       if (list_of_path.flatten.isEmpty)
         REPL.writeInBlue("There is no ", terminal) + (if maxDepth == 0 then (REPL.writeInBlue("direct ", terminal)) else "") + REPL.writeInBlue("connections between ", terminal) + REPL.writeColor(178, start, terminal) + REPL.writeInBlue(" and ", terminal) + REPL.writeColor(178, end, terminal) + (if maxDepth > 0 then (REPL.writeInBlue(" within ", terminal) + REPL.writeColor(178, maxDepth.toString, terminal) + REPL.writeInBlue(" hops.", terminal)) else "")
       else
-        REPL.writeInBlue("To go from ", terminal) + REPL.writeColor(178, start, terminal) + REPL.writeInBlue(" to ", terminal) + REPL.writeColor(178, end, terminal) + REPL.writeInBlue(".\nYou can take the following paths :\n", terminal) + REPL.writeColor(178, list_of_path.map(m => calculatePath(m)).mkString("\n"), terminal)
+        val p = if using.equalsIgnoreCase("") then "" else REPL.writeInBlue("and using : ",terminal) + REPL.writeColor(178,String.join(",",usingList),terminal)
+        REPL.writeInBlue("To go from ", terminal) + REPL.writeColor(178, start, terminal) + REPL.writeInBlue(" to ", terminal) + REPL.writeColor(178, end, terminal) + REPL.writeInBlue(s" within ${REPL.writeColor(178,maxDepth.toString,terminal)} ${REPL.writeInBlue("hops",terminal)} $p ${REPL.writeInBlue("\nYou can take the following paths :\n", terminal)}" + REPL.writeColor(178, list_of_path.map(m => calculatePath(m)).mkString("\n"), terminal),terminal)
+
     }
   }
 
