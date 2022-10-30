@@ -33,11 +33,20 @@ class AllowTest  extends AnyFunSuite{
   test("Parsing allow"){
     val is = Parser(Lexer("République to Gares allow 3").lex()).parse()
     val should = Ast(
-      Node(Parameter(Parameter.Type.ToOperator, "allow:3"),
+      Node(Parameter(Parameter.Type.ToOperator, "allow:3;"),
         Leaf[String](Parameter(Parameter.Type.Argument, "République")),
         Leaf[String](Parameter(Parameter.Type.Argument, "Gares")))
     )
     assert(is == should)
+  }
+
+  test("Parsing allow and list of lines"){
+    val is = Parser(Lexer("Gares to Tournebride allow 1 using a,C1").lex()).parse()
+    val should = Ast(
+      Node(Parameter(Parameter.Type.ToOperator, "allow:1;using:a,C1;"),
+        Leaf[String](Parameter(Parameter.Type.Argument, "Gares")),
+        Leaf[String](Parameter(Parameter.Type.Argument, "Tournebride")))
+    )
   }
 
 

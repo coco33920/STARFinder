@@ -9,7 +9,7 @@ import scala.collection.mutable
 object Lexer:
 
   def isAnAllowedCharacter(input: Char): Boolean =
-    input.isLetterOrDigit || input == '>' || input == '-' || input == '<'
+    input.isLetterOrDigit || input == '>' || input == '-' || input == '<' || input == ','
 
   def isAndOperator(input: Char): Boolean =
     (input == '&') || (input == '∩')

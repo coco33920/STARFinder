@@ -5,6 +5,8 @@ import fr.charlotte.lexing.Token
 import fr.charlotte.ast.Parameter
 import fr.charlotte.runtime.Translator
 
+import scala.collection.mutable
+
 object Ast:
   enum Tree:
     case Null
@@ -14,12 +16,19 @@ object Ast:
 case class Ast(tpe: Ast.Tree):
 
   def printBody(body: Any): String = {
-    if(body.toString.trim.equalsIgnoreCase("")) then
+    if(body.toString.equalsIgnoreCase(""))
       return ""
-    if Translator.isInteger(body.toString) then
-      s"show ${body.toString}"
-    else
-      ""
+    val s = body.toString.split(";")
+    if(s.isEmpty)
+      return ""
+    val builder = mutable.StringBuilder()
+    for(i <- 0 until s.length){
+      val v = s(i).split(":")
+      if(v.length >= 2){
+        builder.append(s"${v(0)} ${v(1)} ")
+      }
+    }
+    builder.toString();
   }
 
   def print(): String = {
@@ -56,9 +65,9 @@ case class Ast(tpe: Ast.Tree):
       case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
   }
 
-  def injectKeyword(i: Int,b: Token.Type): Ast = {
-    if(!Token.isAnIntegerKeyword(b))
-      throw new STARException("Syntax Error", "Error while parsing, you should use a keyword only")
+  def injectKeyword[T](i: T,b: Token.Type): Ast = {
+    if(!Token.isAKeyword(b))
+      throw new STARException("Syntax Error", "Error while parsing, you should use a keyword")
     this.tpe match
       case Ast.Tree.Node(Parameter(stpe,body),s1:Ast.Tree,s2:Ast.Tree) =>
         if Parameter.isAnOperator(stpe) then

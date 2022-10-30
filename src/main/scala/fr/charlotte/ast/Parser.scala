@@ -28,8 +28,7 @@ class Parser(input: List[Token]){
         case i if i.isEmpty => (acc,List.empty[Token])
         case Token(Token.Type.RPar,_,_)::tail => (acc,tail)
         case Token(Token.Type.EOF,_,_)::_ => (acc,List.empty[Token])
-        case Token(Token.Type.AllowKeyword,_,_)::tail => aux(tail,acc,Token.Type.AllowKeyword)
-        case Token(Token.Type.ShowKeyword,_,_)::tail => aux(tail,acc,Token.Type.ShowKeyword)
+        case Token(t,_,_)::tail if Token.isAKeyword(t) => aux(tail,acc,t)
         case Token(Token.Type.Quote,_,_)::tail =>
           val (str,t) = parse_string(tail)
           val a = Ast.Tree.Leaf[String](Parameter(Parameter.Type.Argument,str))
@@ -74,6 +73,9 @@ class Parser(input: List[Token]){
                 throw new STARException("Syntax error", s"${Token.printToken(t)} should be used with integers")
               val v = Integer.parseInt(text)
               val ast = acc.injectKeyword(v,t)
+              aux(tail,ast,t)
+            case t if Token.isAStringKeyword(t) =>
+              val ast = acc.injectKeyword(text,t)
               aux(tail,ast,t)
             case Token.Type.NotOperator =>
               val n_val = Ast(value).applyNotOperator()
