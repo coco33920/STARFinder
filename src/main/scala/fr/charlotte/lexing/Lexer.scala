@@ -9,7 +9,7 @@ import scala.collection.mutable
 object Lexer:
 
   def isAnAllowedCharacter(input: Char): Boolean =
-    input.isLetterOrDigit || input == '>' || input == '-'
+    input.isLetterOrDigit || input == '>' || input == '-' || input == '<' || input == ','
 
   def isAndOperator(input: Char): Boolean =
     (input == '&') || (input == '∩')
@@ -23,7 +23,10 @@ object Lexer:
   def isToOperator(input: Char): Boolean =
     (input == '→')
 
-class Lexer(input: String){
+  def isAllowKeyword(input: Char): Boolean =
+    (input == '@')
+
+class Lexer(input: String) {
   var currentPos = 0
   var token: mutable.ArrayBuffer[Token] = mutable.ArrayBuffer.empty[Token]
 
@@ -43,6 +46,10 @@ class Lexer(input: String){
     else if Lexer.isToOperator(nextChar) then
       currentPos += 1
       token += Token(ToOperator, nextChar.toString, tokenStartPos)
+      true
+    else if Lexer.isAllowKeyword(nextChar) then
+      currentPos += 1
+      token += Token(AllowKeyword, nextChar.toString, tokenStartPos)
       true
     else
       false
@@ -80,13 +87,13 @@ class Lexer(input: String){
       if nextChar.isWhitespace then
         currentPos += 1
       else if lexOperators(nextChar, tokenStartPos) then ()
-      else if lexParenthesis(nextChar,tokenStartPos) then ()
-      else if lexString(nextChar,tokenStartPos) then ()
+      else if lexParenthesis(nextChar, tokenStartPos) then ()
+      else if lexString(nextChar, tokenStartPos) then ()
       else if nextChar == '"' then
         currentPos += 1
         token += Token(Token.Type.Quote, "", tokenStartPos)
       else
-        throw new STARException("Lexing Error",s"Lexing cannot complete, unknown character ${input(currentPos)} at position ${currentPos}")
+        throw new STARException("Lexing Error", s"Lexing cannot complete, unknown character ${input(currentPos)} at position ${currentPos}")
 
     token += Token(EOF, "<EOF>", currentPos)
     token.toList

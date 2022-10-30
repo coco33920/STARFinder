@@ -3,6 +3,7 @@ package fr.charlotte.ast
 import fr.charlotte.lexing.Token
 import Ast.Tree.*
 import fr.charlotte.STARException
+import fr.charlotte.runtime.Translator
 
 import scala.annotation.tailrec
 
@@ -27,7 +28,7 @@ class Parser(input: List[Token]){
         case i if i.isEmpty => (acc,List.empty[Token])
         case Token(Token.Type.RPar,_,_)::tail => (acc,tail)
         case Token(Token.Type.EOF,_,_)::_ => (acc,List.empty[Token])
-        case Token(Token.Type.AllowKeyword,_,_)::tail => aux(tail,acc,Token.Type.AllowKeyword)
+        case Token(t,_,_)::tail if Token.isAKeyword(t) => aux(tail,acc,t)
         case Token(Token.Type.Quote,_,_)::tail =>
           val (str,t) = parse_string(tail)
           val a = Ast.Tree.Leaf[String](Parameter(Parameter.Type.Argument,str))
@@ -67,15 +68,15 @@ class Parser(input: List[Token]){
         case Token(Token.Type.Identifier, text, _) :: tail =>
           val value = Leaf[String](Parameter[String](Parameter.Type.Argument, text))
           lastToken match
-            case Token.Type.AllowKeyword =>
-              var v = 0
-              try{
-                v = Integer.parseInt(text)
-              }catch {
-                case _: Exception => throw new STARException("Syntax Error","Parsing could not finish, allow should not be used with non-integers")
-              }
-              val ast = acc.injectToAllow(v)
-              aux(tail,ast,Token.Type.Identifier)
+            case t if Token.isAnIntegerKeyword(t) =>
+              if(!Translator.isInteger(text)) then
+                throw new STARException("Syntax error", s"${Token.printToken(t)} should be used with integers")
+              val v = Integer.parseInt(text)
+              val ast = acc.injectKeyword(v,t)
+              aux(tail,ast,t)
+            case t if Token.isAStringKeyword(t) =>
+              val ast = acc.injectKeyword(text,t)
+              aux(tail,ast,t)
             case Token.Type.NotOperator =>
               val n_val = Ast(value).applyNotOperator()
               val ast = acc.injectValue(n_val.tpe)

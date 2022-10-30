@@ -18,12 +18,27 @@ object Token:
     case Quote
     case LPar
     case RPar
+    case ShowKeyword
+    case UsingKeyword
     case True
     case False
     case EOF
     case Null
     case AllowKeyword
 
+  def isAnIntegerKeyword(t: Type): Boolean =
+    t match
+      case AllowKeyword => true
+      case ShowKeyword => true
+      case _ => false
+      
+  def isAStringKeyword(t: Type): Boolean =
+    t match
+      case UsingKeyword => true
+      case _ => false
+      
+  def isAKeyword(t: Type): Boolean = isAStringKeyword(t) || isAnIntegerKeyword(t)  
+  
   def stringToTokenType(text: String): Type =
     text.trim match
       case "or" => OrOperator
@@ -35,6 +50,10 @@ object Token:
       case "true" => True
       case "false" => False
       case "allow" => AllowKeyword
+      case "show" => ShowKeyword
+      case "<<" => ShowKeyword
+      case "limit" => ShowKeyword
+      case "using" => UsingKeyword
       case _ => Identifier
   def printToken(t: Token.Type): String =
     t match
@@ -48,6 +67,8 @@ object Token:
       case RPar => ")"
       case Null => ""
       case EOF => "<EOF>"
+      case ShowKeyword => "show"
       case False => "false"
+      case UsingKeyword => "using"
       case AllowKeyword => "allow"
       case Identifier => ""
