@@ -25,6 +25,12 @@ object Token:
     case Null
     case AllowKeyword
 
+  def isAnIntegerKeyword(t: Type): Boolean =
+    t match
+      case AllowKeyword => true
+      case ShowKeyword => true
+      case _ => false
+  
   def stringToTokenType(text: String): Type =
     text.trim match
       case "or" => OrOperator

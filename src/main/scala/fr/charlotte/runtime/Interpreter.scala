@@ -115,7 +115,15 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       connection(s, s2, maxDepth)
   }
 
-  def unpackageToOperator(s1: Ast.Tree, s2: Ast.Tree, maxDepth: Int): String = {
+  def unpackageToOperator(s1: Ast.Tree, s2: Ast.Tree, body: String): String = {
+    var maxDepth = 0
+    if(body.contains("allow:")){
+      try {
+        maxDepth = Integer.parseInt(body.split(";").filter(s => s.contains("allow:"))(0).split(":")(1))
+      }catch {
+        case _: Exception => maxDepth = 0
+      }
+    }
     (s1, s2) match
       case (Ast.Tree.Leaf(Parameter(Parameter.Type.Argument, body)), Ast.Tree.Leaf(Parameter(Parameter.Type.Argument, body1)))
       => executeToOperators(body.toString, body1.toString, maxDepth)
@@ -124,7 +132,7 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
 
   def interprete: (String, util.ArrayList[String], String) = {
     ast.tpe match
-      case Node(Parameter(Parameter.Type.ToOperator, body: Int), s1: Ast.Tree, s2: Ast.Tree)
+      case Node(Parameter(Parameter.Type.ToOperator, body: String), s1: Ast.Tree, s2: Ast.Tree)
       =>
         val s = unpackageToOperator(s1, s2, body)
         (s, new util.ArrayList[String](), s)

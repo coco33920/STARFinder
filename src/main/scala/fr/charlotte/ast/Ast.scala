@@ -51,19 +51,31 @@ case class Ast(tpe: Ast.Tree):
     this.tpe match
       case Ast.Tree.Node(s: Parameter[_],s1: Ast.Tree, s2: Ast.Tree) => 
         s.tpe match
-          case Parameter.Type.ToOperator => Ast(Ast.Tree.Node(Parameter[Int](Parameter.Type.ToOperator, i),s1,s2))
+          case Parameter.Type.ToOperator => Ast(Ast.Tree.Node(Parameter[String](Parameter.Type.ToOperator, s"allow:$i;"),s1,s2))
           case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
       case _ => throw new STARException("Syntax Error","Error while parsing, allow should only be used after a to operator")
   }
 
-  def injectShow(i: Int): Ast = {
+  def injectKeyword(i: Int,b: Token.Type): Ast = {
+    if(!Token.isAnIntegerKeyword(b))
+      throw new STARException("Syntax Error", "Error while parsing, you should use a keyword only")
     this.tpe match
-      case Ast.Tree.Node(s:Parameter[_],s1:Ast.Tree,s2:Ast.Tree) =>
-        if Parameter.isAnOperator(s.tpe) then
-          Ast(Ast.Tree.Node(Parameter[Int](s.tpe,i),s1,s2))
+      case Ast.Tree.Node(Parameter(stpe,body),s1:Ast.Tree,s2:Ast.Tree) =>
+        if Parameter.isAnOperator(stpe) then
+          var r = ""
+          if body.toString.contains(Token.printToken(b)) then {
+            val c = Token.printToken(b) + ":"
+            val r2 = body.toString.split(";")
+            val rc = r2.filter(s => s.contains(c))(0)
+            val nb = body.toString.replace(rc, s"${Token.printToken(b)}:$i")
+            r = nb
+          }else{
+            r = body.toString + s"${Token.printToken(b)}:$i;"
+          }
+          Ast(Ast.Tree.Node(Parameter[String](stpe, r),s1,s2))
         else
-          throw new STARException("Syntax Error", "Error while parsing, you should use show after an operator")
-      case _ => throw new STARException("Syntax Error", "Error while parsing you should use show after an operator")
+          throw new STARException("Syntax Error", s"Error while parsing, you should use ${Token.printToken(b)} after an operator")
+      case _ => throw new STARException("Syntax Error",s"Error while parsing, you should use ${Token.printToken(b)} after an operator")
   }
 
   def applyNotOperator(): Ast = {

@@ -20,8 +20,9 @@ case class Translator(tablename: String, input: Ast.Tree) {
   def translateBody(body: Any): String ={
     if body.toString == "" then
       ""
-    else if isInteger(body.toString) then
-      val s = Integer.parseInt(body.toString)
+    else if body.toString.contains("show:") then
+      val t = body.toString.split(";").filter(s => s.contains("show:"))(0).split(":")(1)
+      val s = Integer.parseInt(t)
       s"LIMIT ${s}"
     else
       ""

@@ -3,6 +3,7 @@ package fr.charlotte.ast
 import fr.charlotte.lexing.Token
 import Ast.Tree.*
 import fr.charlotte.STARException
+import fr.charlotte.runtime.Translator
 
 import scala.annotation.tailrec
 
@@ -68,24 +69,12 @@ class Parser(input: List[Token]){
         case Token(Token.Type.Identifier, text, _) :: tail =>
           val value = Leaf[String](Parameter[String](Parameter.Type.Argument, text))
           lastToken match
-            case Token.Type.AllowKeyword =>
-              var v = 0
-              try{
-                v = Integer.parseInt(text)
-              }catch {
-                case _: Exception => throw new STARException("Syntax Error","Parsing could not finish, allow should be used with an integer")
-              }
-              val ast = acc.injectToAllow(v)
-              aux(tail,ast,Token.Type.Identifier)
-            case Token.Type.ShowKeyword =>
-              var v = 0
-              try{
-                v = Integer.parseInt(text)
-              }catch{
-                case _: Exception => throw new STARException("Syntax Error","Parsing could not finish, show should be used with an integer")
-              }
-              val ast = acc.injectShow(v)
-              aux(tail,ast,Token.Type.Identifier)
+            case t if Token.isAnIntegerKeyword(t) =>
+              if(!Translator.isInteger(text)) then
+                throw new STARException("Syntax error", s"${Token.printToken(t)} should be used with integers")
+              val v = Integer.parseInt(text)
+              val ast = acc.injectKeyword(v,t)
+              aux(tail,ast,t)
             case Token.Type.NotOperator =>
               val n_val = Ast(value).applyNotOperator()
               val ast = acc.injectValue(n_val.tpe)

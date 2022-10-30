@@ -16,6 +16,7 @@ class RuntimeTest extends AnyFunSuite {
     assert(p.equalsIgnoreCase(should))
   }
   test("Test with a limit"){
+    val s = Parser(Lexer("C1 or C2 show 5").lex()).parse()
     val p = Translator("lignes", Parser(Lexer("C1 or C2 show 5").lex()).parse().tpe).translate
     val should = "((lignes LIKE \"%C1%\") OR (lignes LIKE \"%C2%\")) LIMIT 5"
     assert(p.equalsIgnoreCase(should))
