@@ -52,6 +52,7 @@ object Token:
       case "allow" => AllowKeyword
       case "show" => ShowKeyword
       case "<<" => ShowKeyword
+      case "limit" => ShowKeyword
       case "using" => UsingKeyword
       case _ => Identifier
   def printToken(t: Token.Type): String =
