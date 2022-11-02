@@ -19,7 +19,7 @@ public interface Provider {
     ArrayList<String> executeValue(String endQuest);
     ArrayList<String> exposeAllLines();
     ArrayList<String> exposeAllStops();
-    default File initializeDatabase(){
+    default File initializeDatabase(boolean verbose){
         String home = System.getProperty("user.home");
         String delimiter = File.separator;
         File f = new File(home + delimiter + ".starfinder" + delimiter);
@@ -33,8 +33,18 @@ public interface Provider {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Database file loaded to " + file.getAbsolutePath());
+        if(verbose)
+            System.out.println("Database file loaded to " + file.getAbsolutePath());
         return file;
+    }
+    
+    default File getHomeFile(){
+        String home = System.getProperty("user.home");
+        String delimiter = File.separator;
+        File f = new File(home + delimiter + ".starfinder" + delimiter);
+        if(!f.exists())
+            f.mkdir();
+        return f;
     }
 
     void load();

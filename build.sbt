@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "com.lihaoyi" %% "os-lib" % "0.8.1",
   "org.xerial" % "sqlite-jdbc" % "3.39.3.0",
   "commons-io" % "commons-io" % "20030203.000550",
-  "org.jline" % "jline" % "3.21.0"
+  "org.jline" % "jline" % "3.21.0",
+  "org.json" % "json" % "20220924"
 )
 lazy val root = (project in file("."))
   .settings(
