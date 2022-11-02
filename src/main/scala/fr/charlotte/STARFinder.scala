@@ -46,12 +46,12 @@ object STARFinder extends CommandApp(
           case _ => if verbose then println("Backend currently supported : STAR/Rennes TAN/Nantes") else ()
 
         Config.config("defaultProvider").str.toUpperCase.trim match
-          case "STAR" => Utils.setDefaultProvider(STARProvider(verbose))
-          case "TAN" => Utils.setDefaultProvider(TANProvider(verbose))
+          case "STAR" => Utils.setDefaultProvider(STARProvider.getInstance(verbose))
+          case "TAN" => Utils.setDefaultProvider(TANProvider.getInstance(verbose))
           case e => {
             if verbose then
               println("The backend for " + e + " is not implemented yet, defaulting to STAR")
-            Utils.setDefaultProvider(STARProvider(verbose))
+            Utils.setDefaultProvider(STARProvider.getInstance(verbose))
           }
         if (update)
           println("Not implemented yet")

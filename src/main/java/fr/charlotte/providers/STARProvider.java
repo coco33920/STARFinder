@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class STARProvider implements Provider {
 
+    private static STARProvider instance;
 
     @Override
     public String implementationName() {
@@ -33,10 +34,15 @@ public class STARProvider implements Provider {
         this.databaseLite = new DatabaseLite(databaseFile.getAbsolutePath());
         this.configureTables();
         this.verbose = verbose;
+        STARProvider.instance = this;
     }
 
     public STARProvider(){
         this(false);
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     public void configureTables(){
@@ -184,5 +190,20 @@ public class STARProvider implements Provider {
     @Override
     public void update() {
         System.out.println("Not implemented for STAR yet :(");
+    }
+
+    public static STARProvider getInstance() {
+        if(instance == null){
+           new STARProvider();
+        }
+        return instance;
+    }
+    
+    public static STARProvider getInstance(boolean verbose){
+        if(instance == null){
+            new STARProvider(verbose);
+        }
+        instance.setVerbose(verbose);
+        return instance;
     }
 }

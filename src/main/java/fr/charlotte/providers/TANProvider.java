@@ -11,11 +11,13 @@ import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class TANProvider implements Provider {
+    
+    private static TANProvider instance;
+    
     private boolean verbose = false;
     private final DatabaseLite databaseLite;
     public TANProvider(boolean verbose){
@@ -25,6 +27,7 @@ public class TANProvider implements Provider {
         this.databaseLite = new DatabaseLite(databaseFile.getAbsolutePath());
         this.configureDatabases();
         this.verbose = verbose;
+        instance = this;
     }
     public TANProvider(){
         this(false);
@@ -172,11 +175,24 @@ public class TANProvider implements Provider {
         return new ArrayList<>();
     }
 
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
     @Override
     public ArrayList<String> exposeAllStops() {
         String statement = "select nomarret from tan_nantes_lines";
         return Utils.uniqueGet(databaseLite,statement);
     }
 
+    public static TANProvider getInstance(boolean verbose) {
+        if(instance == null)
+            new TANProvider(verbose);
+        instance.setVerbose(verbose);
+        return instance;
+    }
 
+    public static TANProvider getInstance() {
+        return getInstance(false);
+    }
 }

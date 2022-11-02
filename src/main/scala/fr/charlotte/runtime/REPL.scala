@@ -89,7 +89,7 @@ class REPL(var provider: Provider, var verbose: Boolean) {
           else
             arg.toLowerCase match
               case "star" | "rennes" =>
-                val p = STARProvider(verbose);
+                val p = STARProvider.getInstance(verbose)
                 p.load()
                 this.provider = p
                 terminal.writer().print(writeInBlue("You switched to ", terminal))
@@ -98,7 +98,7 @@ class REPL(var provider: Provider, var verbose: Boolean) {
                 terminal.writer().println(writeColor(178, "Rennes", terminal))
                 continue = false
               case "tan" | "nantes" =>
-                val p = TANProvider(verbose);
+                val p = TANProvider.getInstance(verbose)
                 p.load()
                 this.provider = p
                 terminal.writer().print(writeInBlue("You switched to ", terminal))
