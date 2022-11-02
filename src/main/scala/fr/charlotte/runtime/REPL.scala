@@ -94,7 +94,7 @@ class REPL(var provider: Provider, var verbose: Boolean) {
                 this.provider = p
                 terminal.writer().print(writeInBlue("You switched to ", terminal))
                 terminal.writer().print(writeColor(178, "STAR ", terminal))
-                terminal.writer().print(writeInBlue("as your content provider for the town of ",terminal))
+                terminal.writer().print(writeInBlue("as your content provider for the city of ",terminal))
                 terminal.writer().println(writeColor(178, "Rennes", terminal))
                 continue = false
               case "tan" | "nantes" =>
@@ -103,7 +103,7 @@ class REPL(var provider: Provider, var verbose: Boolean) {
                 this.provider = p
                 terminal.writer().print(writeInBlue("You switched to ", terminal))
                 terminal.writer().print(writeColor(178, "TAN ", terminal))
-                terminal.writer().print(writeInBlue("as your content provider for the town of ",terminal))
+                terminal.writer().print(writeInBlue("as your content provider for the city of ",terminal))
                 terminal.writer().println(writeColor(178, "Nantes", terminal))
                 continue = false
               case e =>

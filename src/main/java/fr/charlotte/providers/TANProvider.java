@@ -11,6 +11,7 @@ import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -175,13 +176,15 @@ public class TANProvider implements Provider {
     @Override
     public ArrayList<String> listOfLinesFromStopName(String name) {
         String statement = "select lignes from tan_nantes_stops where nomarret=\"" + name + "\"";
-        return Utils.uniqueGet(this.databaseLite, statement);
+        String s = (String) databaseLite.read(statement,"lignes");
+        return new ArrayList<>(Arrays.asList(s.split(";")));
     }
 
     @Override
     public ArrayList<String> listOfStopsFromLineName(String name) {
-        String statement = "select nomarret from tan_nantes_stops where lignes like \"%" + name + "%\"";
-        return Utils.uniqueGet(databaseLite, statement);
+        String statement = "select arrets from tan_nantes_lines where ligne = \"" + name + "\"";
+        String s = (String) databaseLite.read(statement, "arrets");
+        return new ArrayList<>(Arrays.asList(s.split(";")));
     }
 
     @Override
