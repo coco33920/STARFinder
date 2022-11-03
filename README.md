@@ -99,6 +99,22 @@ example of usage
 * `Républiques → Gares`
 * `Gares → Tournebride allow 1`
 
+## Examples/Images
+### Help menu
+![help](https://user-images.githubusercontent.com/17108449/199769299-d8fcea1d-82ff-4e49-b9e9-1a861a3e4f20.png)
+
+### All STAR stops with the C1 and the metro (a or b)
+![image](https://user-images.githubusercontent.com/17108449/199769707-e6e8c4bd-b3cc-4853-be18-c89571ae688c.png)
+
+### Direct connections between Gares and République
+![image](https://user-images.githubusercontent.com/17108449/199769989-658a1e3c-6f62-4e4b-92e6-838cdcee751a.png)
+
+### Itineraries between Gare and Tournebride using only the *a* from Gares
+![image](https://user-images.githubusercontent.com/17108449/199770543-a10c7d08-9544-4be9-a36c-6df9c7c103a4.png)
+
+And many more, enjoy! :)
+
+
 ## The Providers (not implemented  yet)
 Java is used to provide an API in the form of an interface, that can 
 be implemented to provide support for multiple backends (STAR, TBM, etc.)
