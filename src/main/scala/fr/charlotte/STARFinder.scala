@@ -54,7 +54,9 @@ object STARFinder extends CommandApp(
             Utils.setDefaultProvider(STARProvider.getInstance(verbose))
           }
         if (update)
-          println("Not implemented yet")
+          println("Please wait, this may take up to a few minutes.")
+          val updated = Utils.getDefaultProvider.update();
+          println(updated)
           repl = false
         if (info)
           println(s"STARFinder version ${Utils.VERSION}, Made by Charlotte Thomas @ISTIC Univ-Rennes1 to learn Scala, backend for ${Utils.getDefaultProvider.implementationName()}-${Utils.getDefaultProvider.townName()}")
