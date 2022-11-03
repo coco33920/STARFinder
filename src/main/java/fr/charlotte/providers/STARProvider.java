@@ -17,23 +17,37 @@ import java.util.stream.Collectors;
 
 public class STARProvider implements Provider {
 
+    private static STARProvider instance;
 
     @Override
     public String implementationName() {
         return "STAR";
     }
 
+    private boolean verbose = false;
     private final DatabaseLite databaseLite;
 
-    public STARProvider(){
-        System.out.println("Initializing STAR as Provider");
-        File databaseFile = this.initializeDatabase();
+    public STARProvider(boolean verbose){
+        if(verbose)
+            System.out.println("Initializing STAR as Provider");
+        File databaseFile = this.initializeDatabase(verbose);
         this.databaseLite = new DatabaseLite(databaseFile.getAbsolutePath());
         this.configureTables();
+        this.verbose = verbose;
+        STARProvider.instance = this;
+    }
+
+    public STARProvider(){
+        this(false);
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     public void configureTables(){
-        System.out.println("Configuring database for STAR");
+        if(this.verbose)
+            System.out.println("Configuring database for STAR");
         String first = "create table if not exists rennes_star_lines(id integer constraint id primary key autoincrement ,nomarret text,lignes text);";
         String s = "create table if not exists star_rennes_connections(id integer constraint id primary key autoincrement, nomlignes text, lignes text);";
         String statements = "create table if not exists star_rennes(id integer constraint id primary key autoincrement, name text, aller_id text, retour_id text, other_ways text);";        try {
@@ -81,31 +95,14 @@ public class STARProvider implements Provider {
         return "Rennes";
     }
 
-    public ArrayList<String> uniqueGet(String statement){
-        ResultSet rs = this.databaseLite.getResult(statement);
-        if(rs == null){
-            return new ArrayList<>();
-        }
-        ArrayList<String> result = new ArrayList<>();
-        while (true) {
-            try {
-                if (!rs.next()) break;
-                String n = rs.getString(1);
-                if(!result.contains(n))
-                    result.add(n);
-            }catch (Exception e) {
-                return new ArrayList<>();
-            }
-        }
-        return result;
-    }
+    
 
     @Override
     public ArrayList<String> listOfLinesFromStopName(String name) {
         String statement = String.format(
                 "SELECT lignes FROM rennes_star_lines WHERE nomarret=\"%s\"", name
         );
-        ArrayList<String> s = uniqueGet(statement);
+        ArrayList<String> s = Utils.uniqueGet(this.databaseLite,statement);
         ArrayList<String> result = new ArrayList<>();
         s.forEach(s1 -> result.addAll(Arrays.stream(s1.split(";")).toList()));
         return result;
@@ -114,7 +111,7 @@ public class STARProvider implements Provider {
     @Override
     public ArrayList<String> listOfStopsFromLineName(String name) {
         String statement = "select nomarret from rennes_star_lines where lignes like \"%"+name+"%\"";
-        ArrayList<String> s = uniqueGet(statement);
+        ArrayList<String> s = Utils.uniqueGet(this.databaseLite,statement);
         ArrayList<String> result = new ArrayList<>();
         s.forEach(s1 -> result.addAll(Arrays.stream(s1.split(";")).toList()));
         return result;
@@ -123,7 +120,7 @@ public class STARProvider implements Provider {
     @Override
     public HashMap<String, ArrayList<String>> listOfConnectionsFromLine(String name){
         String statement = "select lignes from star_rennes_connections where nomlignes=\"" + name + "\"";
-        ArrayList<String> s = uniqueGet(statement);
+        ArrayList<String> s = Utils.uniqueGet(this.databaseLite,statement);
         ArrayList<String> result = new ArrayList<>();
         HashMap<String,ArrayList<String>> map = new HashMap<>();
         for (String s1 : s) {
@@ -187,11 +184,26 @@ public class STARProvider implements Provider {
     @Override
     public ArrayList<String> executeValue(String endQuest) {
         String statement = "select nomarret from rennes_star_lines where " + endQuest;
-        return uniqueGet(statement);
+        return Utils.uniqueGet(this.databaseLite,statement);
     }
 
     @Override
-    public void update() {
+    public String update() {
+       return "not implemented for star yet :(";
+    }
 
+    public static STARProvider getInstance() {
+        if(instance == null){
+           new STARProvider();
+        }
+        return instance;
+    }
+    
+    public static STARProvider getInstance(boolean verbose){
+        if(instance == null){
+            new STARProvider(verbose);
+        }
+        instance.setVerbose(verbose);
+        return instance;
     }
 }
