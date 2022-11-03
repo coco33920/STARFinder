@@ -40,7 +40,7 @@ To compile the program to a jar just run
 git clone git@github.com:coco33920/STARFinder.git
 cd STARFinder/
 sbt assembly
-java -jar target/scala-3.2.0 snapshot.jar <arguments>
+java -jar target/scala-3.2.0/star-finder.jar <arguments>
 ```
 
 ## The Language
@@ -118,7 +118,7 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
 - [X] Command line launch *(Scala)*
 - [X] Cache *(Java)*
 - [X] Better REPL
-- [ ] Update provider
+- [X] Update provider
 - [ ] Implementing more providers 
   - [X] Rennes (STAR)
   - [ ] Paris
