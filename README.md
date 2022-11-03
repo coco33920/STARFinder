@@ -21,6 +21,8 @@ You can download the latest `star-finder.jar` in the [`releases`](https://github
 You can just launch the REPL by running the jar (note: the main code was compiled with OpenJDK 19), switching the providers 
 by using the `--provider "provider"` argument, to see the whole list just run `--help` as arguments
 
+To use the language, see [examples](#examples) or the [language specification](#the-language)
+
 ## Current Providers
 The current supported backends are
 * STAR (Rennes)
@@ -99,7 +101,7 @@ example of usage
 * `Républiques → Gares`
 * `Gares → Tournebride allow 1`
 
-## Examples/Images
+## Examples
 ### Help menu
 ![help](https://user-images.githubusercontent.com/17108449/199769299-d8fcea1d-82ff-4e49-b9e9-1a861a3e4f20.png)
 
