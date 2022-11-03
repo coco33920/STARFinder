@@ -188,8 +188,8 @@ public class STARProvider implements Provider {
     }
 
     @Override
-    public void update() {
-        System.out.println("Not implemented for STAR yet :(");
+    public String update() {
+       return "not implemented for star yet :(";
     }
 
     public static STARProvider getInstance() {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface Provider {
-    void update();
+    String update();
     ArrayList<String> listOfLinesFromStopName(String name);
     ArrayList<String> listOfStopsFromLineName(String name);
     HashMap<String,ArrayList<String>> listOfConnectionsFromLine(String name);

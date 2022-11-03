@@ -39,6 +39,7 @@ class REPL(var provider: Provider, var verbose: Boolean) {
     lines.add("info")
     lines.add("exit")
     lines.add("provider")
+    lines.add("update")
     lines.add("or")
     lines.add("and")
     lines.add("not")
@@ -71,6 +72,12 @@ class REPL(var provider: Provider, var verbose: Boolean) {
           terminal.writer().println("Prints information about the program")
           terminal.writer().print(writeColor(178, "provider <provider> : ", terminal))
           terminal.writer().println("Switch between providers, if blank, print list of providers")
+          terminal.writer().print(writeColor(178, "update : ",terminal))
+          terminal.writer().println("Updates your content provider information with the latest news")
+          continue = false
+        case "update" =>
+          val success = provider.update();
+          terminal.writer().println(writeInBlue(success,terminal))
           continue = false
         case "verbose" =>
           verbose = !verbose

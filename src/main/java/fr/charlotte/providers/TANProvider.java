@@ -202,8 +202,19 @@ public class TANProvider implements Provider {
 
 
     @Override
-    public void update() {
-
+    public String update() {
+        File f = new File(getHomeFile().getAbsolutePath() + File.separator + "tan_stops.json");
+        String statement = "delete from tan_nantes_connections";
+        String s2 = "delete from tan_nantes_stops";
+        String s3 = "delete from tan_nantes_lines";
+        if(f.exists())
+            f.delete();
+        databaseLite.update(statement);
+        databaseLite.update(s2);
+        databaseLite.update(s3);
+        this.configureDatabases();
+        this.load();
+        return "Update finished with success";
     }
 
     @Override
