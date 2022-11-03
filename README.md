@@ -24,6 +24,7 @@ by using the `--provider "provider"` argument, to see the whole list just run `-
 ## Current Providers
 The current supported backends are
 * STAR (Rennes)
+* TAN (Nantes)
 
 ## Run
 You can run the project with `sbt`
@@ -119,11 +120,11 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
 - [X] Better REPL
 - [ ] Update provider
 - [ ] Implementing more providers 
-  - [X] Rennes
+  - [X] Rennes (STAR)
   - [ ] Paris
   - [ ] Lyon
-  - [ ] Nantes
-  - [ ] Marseilles
+  - [X] Nantes (TAN)
+  - [ ] Marseille
   - [ ] Lille
   - [ ] Bordeaux
   - [ ] Toulouse 
@@ -138,3 +139,4 @@ This project is using
 * [sql-lite jdbc](https://github.com/xerial/sqlite-jdbc) under Apache-2.0 and BSD license 
 * [apache common-io](https://github.com/apache/commons-io) under Apache-2.0 license
 * [JLine](https://github.com/jline/jline3) under BSD license (see [JLine disclaimer](LICENCE-jline.md))
+* [org.Json](https://github.com/stleary/JSON-java) in the public domain
