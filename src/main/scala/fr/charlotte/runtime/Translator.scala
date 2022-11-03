@@ -17,7 +17,7 @@ object Translator {
 
 case class Translator(tablename: String, input: Ast.Tree) {
 
-  def translateBody(body: Any): String ={
+  def translateBody(body: Any): String = {
     if body.toString == "" then
       ""
     else if body.toString.contains("show:") then

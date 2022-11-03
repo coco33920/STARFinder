@@ -6,13 +6,13 @@ import fr.charlotte.ast.Ast.Tree.*
 import fr.charlotte.lexing.Lexer
 import org.scalatest.funsuite.AnyFunSuite
 
-class AllowTest  extends AnyFunSuite{
+class AllowTest extends AnyFunSuite {
 
-  test("Error with allow"){
+  test("Error with allow") {
     try {
       Parser(Lexer("allow 5").lex()).parse()
       throw new Exception()
-    }catch{
+    } catch {
       case _: STARException =>
         ()
       case _: Exception =>
@@ -20,17 +20,17 @@ class AllowTest  extends AnyFunSuite{
     }
   }
 
-  test("Another allow error"){
-    try{
+  test("Another allow error") {
+    try {
       Parser(Lexer("allow notanumber").lex()).parse()
       throw new Exception()
-    }catch{
+    } catch {
       case _: STARException => ()
       case _: Exception => throw new RuntimeException("Wrong Exception")
     }
   }
 
-  test("Parsing allow"){
+  test("Parsing allow") {
     val is = Parser(Lexer("République to Gares allow 3").lex()).parse()
     val should = Ast(
       Node(Parameter(Parameter.Type.ToOperator, "allow:3;"),
@@ -40,7 +40,7 @@ class AllowTest  extends AnyFunSuite{
     assert(is == should)
   }
 
-  test("Parsing allow and list of lines"){
+  test("Parsing allow and list of lines") {
     val is = Parser(Lexer("Gares to Tournebride allow 1 using a,C1").lex()).parse()
     val should = Ast(
       Node(Parameter(Parameter.Type.ToOperator, "allow:1;using:a,C1;"),

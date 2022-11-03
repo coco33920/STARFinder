@@ -25,7 +25,7 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
     val endLines = provider.listOfLinesFromStopName(end)
     val intersect = Utils.intersectArrayList(startLines, endLines)
     val usingList = util.ArrayList[String]
-    if(!using.equalsIgnoreCase(""))
+    if (!using.equalsIgnoreCase(""))
       using.split(",").foreach(e => usingList.add(e))
     val intersectUsing = Utils.intersectArrayList(intersect, usingList)
     if (!intersect.isEmpty) then {

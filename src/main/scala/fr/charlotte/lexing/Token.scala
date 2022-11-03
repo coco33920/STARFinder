@@ -1,10 +1,11 @@
 package fr.charlotte.lexing
+
 import fr.charlotte.lexing.Token.Type.*
 
 case class Token(
-                tpe: Token.Type,
-                text: String,
-                startPos: Int
+                  tpe: Token.Type,
+                  text: String,
+                  startPos: Int
                 ):
   override def toString: String = s"[type=$tpe;text=$text;startPos=$startPos]"
 
@@ -31,14 +32,14 @@ object Token:
       case AllowKeyword => true
       case ShowKeyword => true
       case _ => false
-      
+
   def isAStringKeyword(t: Type): Boolean =
     t match
       case UsingKeyword => true
       case _ => false
-      
-  def isAKeyword(t: Type): Boolean = isAStringKeyword(t) || isAnIntegerKeyword(t)  
-  
+
+  def isAKeyword(t: Type): Boolean = isAStringKeyword(t) || isAnIntegerKeyword(t)
+
   def stringToTokenType(text: String): Type =
     text.trim match
       case "or" => OrOperator
@@ -55,6 +56,7 @@ object Token:
       case "limit" => ShowKeyword
       case "using" => UsingKeyword
       case _ => Identifier
+
   def printToken(t: Token.Type): String =
     t match
       case OrOperator => "or"

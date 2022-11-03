@@ -143,8 +143,8 @@ public class TANProvider implements Provider {
             ArrayList<String> stopLine = lines.get(line);
             for (String stop : stopLine) {
                 ArrayList<String> linesFromStop = stops.get(stop);
-                for(String l : linesFromStop){
-                    if(!connections.containsKey(line))
+                for (String l : linesFromStop) {
+                    if (!connections.containsKey(line))
                         connections.put(line, new ArrayList<>());
                     connections.get(line).add(new AbstractMap.SimpleImmutableEntry<>(l, stop));
                 }
@@ -154,12 +154,12 @@ public class TANProvider implements Provider {
         return connections;
     }
 
-    public ArrayList<String> generateConnectionSqlCommands(HashMap<String,ArrayList<AbstractMap.SimpleImmutableEntry<String,String>>> connections){
+    public ArrayList<String> generateConnectionSqlCommands(HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> connections) {
 
         ArrayList<String> commands = new ArrayList<>();
 
         connections.forEach((s, simpleImmutableEntries) -> {
-            String str = simpleImmutableEntries.stream().map(entry -> "("+entry.getKey()+","+entry.getValue()+")").collect(Collectors.joining(";"));
+            String str = simpleImmutableEntries.stream().map(entry -> "(" + entry.getKey() + "," + entry.getValue() + ")").collect(Collectors.joining(";"));
             commands.add(String.format("insert into tan_nantes_connections(nomligne,lignes) VALUES(\"%s\",\"%s\")", s, str));
         });
 
@@ -179,7 +179,7 @@ public class TANProvider implements Provider {
                 ArrayList<String> commands = new ArrayList<>();
                 commands.addAll(generateCommandForStops(stops));
                 commands.addAll(generateCommandForLines(lines));
-                commands.addAll(generateConnectionSqlCommands(generateConnections(lines,stops)));
+                commands.addAll(generateConnectionSqlCommands(generateConnections(lines, stops)));
                 commands.forEach(this.databaseLite::update);
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -207,7 +207,7 @@ public class TANProvider implements Provider {
         String statement = "delete from tan_nantes_connections";
         String s2 = "delete from tan_nantes_stops";
         String s3 = "delete from tan_nantes_lines";
-        if(f.exists())
+        if (f.exists())
             f.delete();
         databaseLite.update(statement);
         databaseLite.update(s2);
@@ -233,18 +233,18 @@ public class TANProvider implements Provider {
 
     @Override
     public HashMap<String, ArrayList<String>> listOfConnectionsFromLine(String name) {
-        HashMap<String,ArrayList<String>> result = new HashMap<>();
-        String statement = "select lignes from tan_nantes_connections where nomligne=\""+name+"\"";
-        ArrayList<String> s = Utils.uniqueGet(databaseLite,statement);
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        String statement = "select lignes from tan_nantes_connections where nomligne=\"" + name + "\"";
+        ArrayList<String> s = Utils.uniqueGet(databaseLite, statement);
         for (String s1 : s) {
             String[] sl = s1.split(";");
-            for (String l : sl){
+            for (String l : sl) {
                 String[] v = l.split(",");
                 String key = v[0].replace("(", "");
                 String value = v[1].replace(")", "");
-                if(result.containsKey(key)){
+                if (result.containsKey(key)) {
                     result.get(key).add(value);
-                }else{
+                } else {
                     result.put(key, new ArrayList<>());
                     result.get(key).add(value);
                 }
