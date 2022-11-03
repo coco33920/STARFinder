@@ -16,6 +16,7 @@ object Parameter:
     t match
       case Type.OrOperator | Type.AndOperator | Type.NotOperator | Type.ToOperator => true
       case _ => false
+
   def fromToken(t: Token.Type): Parameter.Type = {
     t match
       case Token.Type.OrOperator => Type.OrOperator
@@ -30,6 +31,7 @@ case class Parameter[A](
                          body: A
                        ):
   override def toString: String = s"[Parameter {Type:$tpe} {Body:$body}]"
+
   def print: String =
     this.tpe match
       case Parameter.Type.None => ""

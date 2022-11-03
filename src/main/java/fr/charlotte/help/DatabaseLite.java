@@ -21,7 +21,7 @@ public class DatabaseLite {
     public DatabaseLite(String file) {
         try {
             Class.forName("org.sqlite.JDBC");
-            this.connection = DriverManager.getConnection("jdbc:sqlite:"+file);
+            this.connection = DriverManager.getConnection("jdbc:sqlite:" + file);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         } catch (ClassNotFoundException e) {
@@ -108,7 +108,7 @@ public class DatabaseLite {
         }
     }
 
-    public void close(){
+    public void close() {
         try {
             this.connection.close();
         } catch (SQLException e) {

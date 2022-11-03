@@ -6,8 +6,8 @@ import fr.charlotte.ast.{Ast, Parameter, Parser}
 import fr.charlotte.lexing.{Lexer, Token}
 import org.scalatest.funsuite.AnyFunSuite
 
-class ParserTests extends AnyFunSuite{
-  test("Simple command test"){
+class ParserTests extends AnyFunSuite {
+  test("Simple command test") {
     val result = Parser(Lexer("C1 + C2").lex()).parse()
     val should = Ast(
       Node(
@@ -18,7 +18,7 @@ class ParserTests extends AnyFunSuite{
     )
     assert(result == should)
   }
-  test("Complex Command Test"){
+  test("Complex Command Test") {
     val result = Parser(Lexer("(C1 or C2) and b").lex()).parse()
     val should = Ast(
       Node(
@@ -33,7 +33,7 @@ class ParserTests extends AnyFunSuite{
     assert(result == should)
   }
 
-  test("Three tests"){
+  test("Three tests") {
     val result = Parser(Lexer("C1 or C2 or C3").lex()).parse()
     val should = Ast(
       Node(
@@ -48,7 +48,7 @@ class ParserTests extends AnyFunSuite{
     assert(result == should)
   }
 
-  test("Not Test"){
+  test("Not Test") {
     val result = Parser(Lexer("not C1 or C2").lex()).parse()
     val should = Ast(
       Node(
@@ -63,7 +63,7 @@ class ParserTests extends AnyFunSuite{
     assert(result == should)
   }
 
-  test("Not Value Test"){
+  test("Not Value Test") {
     val result = Parser(Lexer("not (C1 or C2)").lex()).parse()
     val should = Ast(
       Node(
@@ -78,7 +78,7 @@ class ParserTests extends AnyFunSuite{
     assert(result == should)
   }
 
-  test("To Test"){
+  test("To Test") {
     val res = Parser(Lexer("\"République\" → \"Gares\"").lex()).parse()
     val should = Ast(
       Node(

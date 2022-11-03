@@ -60,11 +60,11 @@ class REPL(var provider: Provider, var verbose: Boolean) {
       val line = lineReader.readLine(writeColor(219, "star-finder ~> ", terminal)).trim
       if (waiting) {
         if (line.equalsIgnoreCase("y") || line.equalsIgnoreCase("yes")) {
-          println(writeInBlue("Updating...",terminal))
+          println(writeInBlue("Updating...", terminal))
           val success = provider.update()
           terminal.writer.println(writeInBlue(success, terminal))
         } else {
-          println(writeInBlue("Update aborted",terminal))
+          println(writeInBlue("Update aborted", terminal))
         }
         waiting = false
       } else {
@@ -88,7 +88,7 @@ class REPL(var provider: Provider, var verbose: Boolean) {
             terminal.writer().println("Updates your content provider information with the latest news")
             continue = false
           case "update" =>
-            terminal.writer().println(writeInBlue(s"Are you sure? This may take up to a few minutes ${writeColor(178,"(y/n)",terminal)}.",terminal))
+            terminal.writer().println(writeInBlue(s"Are you sure? This may take up to a few minutes ${writeColor(178, "(y/n)", terminal)}.", terminal))
             val r = lineReader.getKeyMaps.get("main")
             waiting = true
             continue = false
