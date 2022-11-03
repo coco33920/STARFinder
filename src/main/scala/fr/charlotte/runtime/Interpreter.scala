@@ -23,8 +23,6 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
   def connection(start: String, end: String, maxDepth: Int, using: String): String = {
     val startLines = provider.listOfLinesFromStopName(start)
     val endLines = provider.listOfLinesFromStopName(end)
-    println(startLines)
-    println(endLines)
     val intersect = Utils.intersectArrayList(startLines, endLines)
     val usingList = util.ArrayList[String]
     if(!using.equalsIgnoreCase(""))
