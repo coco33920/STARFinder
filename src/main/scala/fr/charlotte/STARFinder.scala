@@ -15,7 +15,7 @@ import fr.charlotte.runtime.{REPL, Translator}
 Command architecture
 --provider "provider" => change provider "only star is configured atm
 --info => show the config, version, current provider etc.
---update => update the current provider (todo later)
+--update => update the current provider
 --verbose => toggle the verbose
 => send to the REPL
 */
@@ -42,12 +42,18 @@ object STARFinder extends CommandApp(
           case "rennes" => repl = true
           case "nantes" => repl = true
           case "tan" => repl = true
+          case "tcl" => repl = true
+          case "lyon" => repl = true
           case "default" => repl = true
           case _ => if verbose then println("Backend currently supported : STAR/Rennes TAN/Nantes") else ()
 
         Config.config("defaultProvider").str.toUpperCase.trim match
           case "STAR" => Utils.setDefaultProvider(STARProvider.getInstance(verbose))
+          case "RENNES" => Utils.setDefaultProvider(STARProvider.getInstance(verbose))
           case "TAN" => Utils.setDefaultProvider(TANProvider.getInstance(verbose))
+          case "NANTES" => Utils.setDefaultProvider(TANProvider.getInstance(verbose))
+          case "TCL" => Utils.setDefaultProvider(TCLProvider.getInstance(verbose))
+          case "LYON" => Utils.setDefaultProvider(TCLProvider.getInstance(verbose))
           case e => {
             if verbose then
               println("The backend for " + e + " is not implemented yet, defaulting to STAR")
