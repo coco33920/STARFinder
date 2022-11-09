@@ -45,7 +45,13 @@ object STARFinder extends CommandApp(
           case "tcl" => repl = true
           case "lyon" => repl = true
           case "default" => repl = true
-          case _ => if verbose then println("Backend currently supported : STAR/Rennes TAN/Nantes") else ()
+          case _ =>
+            if verbose then
+              println("Backend currently supported : ")
+              println("STAR/Rennes")
+              println("TAN/Nantes")
+              println("TCL/Lyon")
+            else ()
 
         Config.config("defaultProvider").str.toUpperCase.trim match
           case "STAR" => Utils.setDefaultProvider(STARProvider.getInstance(verbose))

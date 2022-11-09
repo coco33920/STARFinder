@@ -174,7 +174,27 @@ public class TCLProvider implements Provider {
 
     @Override
     public String update() {
-        return "Not implemented for TCL yet";
+        File f = new File(getHomeFile().getAbsolutePath() + File.separator + "tcl_metro.json");
+        File f2 = new File(getHomeFile().getAbsolutePath() + File.separator + "tcl_tram.json");
+        File f3 = new File(getHomeFile().getAbsolutePath() + File.separator + "tcl_bus.json");
+        File f4 = new File(getHomeFile().getAbsolutePath() + File.separator + "tcl_stops.json");
+        String statement = "delete from tcl_lyon_lines";
+        String s2 = "delete from tcl_lyon_stops";
+        String s3 = "delete from tcl_lyon_connections";
+        if (f.exists())
+            f.delete();
+        if(f2.exists())
+            f2.delete();
+        if(f3.exists())
+            f3.delete();
+        if(f4.exists())
+            f4.delete();
+        databaseLite.update(statement);
+        databaseLite.update(s2);
+        databaseLite.update(s3);
+        this.initializeDatabase();
+        this.load();
+        return "Update finished with success";
     }
 
     @Override
