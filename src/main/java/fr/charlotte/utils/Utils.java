@@ -2,6 +2,9 @@ package fr.charlotte.utils;
 
 import fr.charlotte.help.DatabaseLite;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -31,6 +34,21 @@ public class Utils {
                 return "";
             }
         }
+    }
+    
+    public static boolean writeStringToFile(String filename,String lines) throws IOException {
+        File f = new File(filename);
+        boolean b;
+        if(!f.exists()){
+            b = f.createNewFile();
+            if(!b)
+                return false;
+        }
+        BufferedWriter fw = new BufferedWriter(new FileWriter(f));
+        fw.write(lines);
+        fw.flush();
+        fw.close();
+        return true;
     }
 
     public static ArrayList<String> uniqueGet(DatabaseLite databaseLite, String statement) {
