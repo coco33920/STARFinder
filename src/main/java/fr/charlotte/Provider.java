@@ -51,9 +51,9 @@ public interface Provider {
     default File getHomeFile() {
         String home = System.getProperty("user.home");
         String delimiter = File.separator;
-        File f = new File(home + delimiter + ".starfinder" + delimiter);
+        File f = new File(home + delimiter + ".starfinder" + delimiter + implementationName().toLowerCase() + delimiter);
         if (!f.exists())
-            f.mkdir();
+            f.mkdirs();
         return f;
     }
 

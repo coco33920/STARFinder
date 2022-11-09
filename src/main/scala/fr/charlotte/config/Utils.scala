@@ -3,7 +3,7 @@ package fr.charlotte.config
 import fr.charlotte.Provider
 
 object Utils {
-  val VERSION = "1.4.0"
+  val VERSION = "1.5.0"
   private var defaultProvider: Provider = null
 
   def setDefaultProvider(p: Provider): Unit = this.defaultProvider = p

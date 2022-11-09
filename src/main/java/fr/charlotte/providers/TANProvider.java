@@ -38,7 +38,7 @@ public class TANProvider implements Provider {
     }
 
 
-    public void configureDatabases() {
+    private void configureDatabases() {
         if (this.verbose)
             System.out.println("Configuring database for TAN");
         String stopDatabase = "create table if not exists tan_nantes_stops(id integer constraint id primary key autoincrement, nomarret text, lignes text)";
@@ -53,7 +53,7 @@ public class TANProvider implements Provider {
         }
     }
 
-    public JSONArray loadStopsRaw() throws IOException {
+    private JSONArray loadStopsRaw() throws IOException {
         File f = new File(getHomeFile().getAbsolutePath() + File.separator + "tan_stops.json");
         String lines = "";
         if (!f.exists()) {
@@ -62,10 +62,7 @@ public class TANProvider implements Provider {
             lines = Utils.readStringFromURL("https://open.tan.fr/ewp/arrets.json");
             boolean b = f.createNewFile();
             if (b) {
-                BufferedWriter fw = new BufferedWriter(new FileWriter(f));
-                fw.write(lines);
-                fw.flush();
-                fw.close();
+                Utils.writeStringToFile(f.getAbsolutePath(),lines);
             }
         } else {
             if (verbose)
@@ -80,7 +77,7 @@ public class TANProvider implements Provider {
         }
     }
 
-    public HashMap<String, ArrayList<String>> loadStops(JSONArray array) throws JSONException {
+    private HashMap<String, ArrayList<String>> loadStops(JSONArray array) throws JSONException {
         HashMap<String, ArrayList<String>> stops = new HashMap<>();
         if (array.isEmpty()) {
             return stops;
@@ -103,7 +100,7 @@ public class TANProvider implements Provider {
         return stops;
     }
 
-    public ArrayList<String> generateCommandForStops(HashMap<String, ArrayList<String>> stops) {
+    private ArrayList<String> generateCommandForStops(HashMap<String, ArrayList<String>> stops) {
         ArrayList<String> commands = new ArrayList<>();
         stops.forEach((s, strings) -> {
             commands.add(String.format("insert into tan_nantes_stops(nomarret,lignes) VALUES(\"%s\",\"%s\")", s, String.join(";", strings)));
@@ -111,7 +108,7 @@ public class TANProvider implements Provider {
         return commands;
     }
 
-    public HashMap<String, ArrayList<String>> inverseHashMap(HashMap<String, ArrayList<String>> stops) {
+    private HashMap<String, ArrayList<String>> inverseHashMap(HashMap<String, ArrayList<String>> stops) {
         HashMap<String, ArrayList<String>> inverse = new HashMap<>();
         for (String key : stops.keySet()) {
             ArrayList<String> lines = stops.get(key);
@@ -128,7 +125,7 @@ public class TANProvider implements Provider {
         return inverse;
     }
 
-    public ArrayList<String> generateCommandForLines(HashMap<String, ArrayList<String>> lines) {
+    private ArrayList<String> generateCommandForLines(HashMap<String, ArrayList<String>> lines) {
         ArrayList<String> commands = new ArrayList<>();
         lines.forEach((s, strings) -> {
             commands.add(String.format("insert into tan_nantes_lines(ligne,arrets) VALUES(\"%s\",\"%s\")", s, String.join(";", strings)));
@@ -136,25 +133,7 @@ public class TANProvider implements Provider {
         return commands;
     }
 
-    public HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> generateConnections(HashMap<String, ArrayList<String>> lines, HashMap<String, ArrayList<String>> stops) {
-        HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> connections = new HashMap<>();
-
-        for (String line : lines.keySet()) {
-            ArrayList<String> stopLine = lines.get(line);
-            for (String stop : stopLine) {
-                ArrayList<String> linesFromStop = stops.get(stop);
-                for (String l : linesFromStop) {
-                    if (!connections.containsKey(line))
-                        connections.put(line, new ArrayList<>());
-                    connections.get(line).add(new AbstractMap.SimpleImmutableEntry<>(l, stop));
-                }
-            }
-        }
-
-        return connections;
-    }
-
-    public ArrayList<String> generateConnectionSqlCommands(HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> connections) {
+    private ArrayList<String> generateConnectionSqlCommands(HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> connections) {
 
         ArrayList<String> commands = new ArrayList<>();
 
@@ -166,8 +145,7 @@ public class TANProvider implements Provider {
         return commands;
     }
 
-
-    public void loadDatabase() throws SQLException, JSONException {
+    private void loadDatabase() throws SQLException, JSONException {
         ResultSet rs = this.databaseLite.getResult("select * from tan_nantes_lines");
         if (!rs.next()) {
             if (verbose)
@@ -179,7 +157,7 @@ public class TANProvider implements Provider {
                 ArrayList<String> commands = new ArrayList<>();
                 commands.addAll(generateCommandForStops(stops));
                 commands.addAll(generateCommandForLines(lines));
-                commands.addAll(generateConnectionSqlCommands(generateConnections(lines, stops)));
+                commands.addAll(generateConnectionSqlCommands(Utils.generateConnections(lines, stops)));
                 commands.forEach(this.databaseLite::update);
             } catch (Exception e) {
                 throw new RuntimeException(e);
