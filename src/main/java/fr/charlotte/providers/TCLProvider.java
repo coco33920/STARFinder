@@ -3,14 +3,16 @@ package fr.charlotte.providers;
 import fr.charlotte.Provider;
 import fr.charlotte.help.DatabaseLite;
 import fr.charlotte.utils.Utils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TCLProvider implements Provider {
@@ -28,20 +30,35 @@ public class TCLProvider implements Provider {
         initializeDatabase();
     }
 
+    private void initializeDatabase(){
+        if (this.verbose)
+            System.out.println("Configuring database for TCL");
+        String stopDatabase = "create table if not exists tcl_lyon_stops(id integer constraint id primary key autoincrement, nomarret text, lignes text)";
+        String thatDatabase = "create table if not exists tcl_lyon_lines(id integer constraint id primary key autoincrement, ligne text, arrets text);";
+        String connectionsDatabase = "create table if not exists tcl_lyon_connections(id integer constraint id primary key autoincrement, nomligne text, lignes text);";
+        try {
+            this.databaseLite.getConnection().prepareStatement(stopDatabase).execute();
+            this.databaseLite.getConnection().prepareStatement(thatDatabase).execute();
+            this.databaseLite.getConnection().prepareStatement(connectionsDatabase).execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    private JSONObject downloadJsonMetro() throws IOException {
-        File f = new File(getHomeFile().getAbsolutePath() + File.separator + "tcl-metro.json");
+
+    private JSONObject downloadTCLData(String name, String id) throws IOException {
+        File f = new File(getHomeFile().getAbsolutePath() + File.separator + name + ".json");
         String lines = "";
         if(!f.exists()){
             if(verbose)
-                System.out.println("TCL metro file does not exists, downloading...");
+                System.out.printf("TCL %s file does not exists, downloading...%n", name);
             if(f.createNewFile()){
-                lines = Utils.readStringFromURL("https://download.data.grandlyon.com/ws/rdata/tcl_sytral.tcllignemf_2_0_0/all.json?maxfeatures=-1&start=1");
+                lines = Utils.readStringFromURL("https://download.data.grandlyon.com/ws/rdata/%s/all.json?maxfeatures=-1&start=1".formatted(id));
                 Utils.writeStringToFile(f.getAbsolutePath(),lines);
             }
         }else{
             if(verbose)
-                System.out.println("TCL metro file exists, reading from it");
+                System.out.printf("TCL %s file exists, reading from it%n", name);
             BufferedReader br = new BufferedReader(new FileReader(f));
             lines = br.lines().collect(Collectors.joining());
         }
@@ -52,29 +69,110 @@ public class TCLProvider implements Provider {
         }
     }
 
-
-    private void initializeDatabase(){
-
+    private void extractIdFromJSONObject(HashMap<String,String> map, JSONObject object){
+        JSONArray metroArray = object.getJSONArray("values");
+        for(int i = 0; i < metroArray.length(); i++){
+            JSONObject obj = metroArray.getJSONObject(i);
+            if(obj.getString("sens").equalsIgnoreCase("Aller")){
+                if(!map.containsKey(obj.getString("ligne"))){
+                    map.put(obj.getString("code_ligne"),obj.getString("ligne"));
+                }
+            }
+        }
     }
+
+    private HashMap<String,String> linesFromId() throws IOException {
+        HashMap<String,String> map = new HashMap<>();
+        JSONObject metroObject = downloadTCLData("tcl_metro", "tcl_sytral.tcllignemf_2_0_0");
+        JSONObject tramObject = downloadTCLData("tcl_tram", "tcl_sytral.tcllignetram_2_0_0");
+        JSONObject busObject = downloadTCLData("tcl_bus", "tcl_sytral.tcllignebus_2_0_0");
+        extractIdFromJSONObject(map,metroObject);
+        extractIdFromJSONObject(map,tramObject);
+        extractIdFromJSONObject(map,busObject);
+        return map;
+    }
+
+    private void putIfNotExists(String toPut, String value, HashMap<String,ArrayList<String>> values){
+        if(!values.containsKey(toPut))
+            values.put(toPut,new ArrayList<>());
+        values.get(toPut).add(value);
+    }
+
+    private AbstractMap.SimpleImmutableEntry<HashMap<String,String>,HashMap<String,String>> calculateFromStopsAndFromLines() throws IOException {
+        HashMap<String,ArrayList<String>> lines = new HashMap<>();
+        HashMap<String, String> stops = new HashMap<>();
+
+        HashMap<String,String> linesById = linesFromId();
+
+
+        JSONObject jsonStops = downloadTCLData("tcl_stops", "tcl_sytral.tclarret");
+        JSONArray array = jsonStops.getJSONArray("values");
+        for(int i = 0; i < array.length(); i++){
+            String name = array.getJSONObject(i).getString("nom");
+            String desserteRaw = array.getJSONObject(i).getString("desserte");
+            List<String> linesDesserte = Arrays.stream(desserteRaw.split(",")).map(s -> s.substring(0,s.length()-2)).map(linesById::get).collect(Collectors.toList());
+            ArrayList<String> linesDessertes = new ArrayList<>();
+            for (String desserte : linesDesserte) {
+                if(!linesDessertes.contains(desserte))
+                    linesDessertes.add(desserte);
+            }
+            String ligneDesservies = String.join(";", linesDessertes);
+
+
+            stops.put(name,ligneDesservies);
+            Arrays.stream(ligneDesservies.split(";")).forEach(s -> putIfNotExists(s,name,lines));
+        }
+        HashMap<String,String> returningValue = new HashMap<>();
+        lines.forEach((s, strings) -> returningValue.put(s,String.join(";",strings)));
+        return new AbstractMap.SimpleImmutableEntry<>(stops,returningValue);
+    }
+
+    private void loadDatabase() throws IOException, SQLException {
+        ResultSet rs = databaseLite.getResult("select * from tcl_lyon_stops");
+        if(!rs.next()) {
+            if(verbose)
+                System.out.println("database empty.. loading in");
+            AbstractMap.SimpleImmutableEntry<HashMap<String, String>, HashMap<String, String>> maps = calculateFromStopsAndFromLines();
+            HashMap<String, String> stops = maps.getKey();
+            HashMap<String, String> lines = maps.getValue();
+            ArrayList<String> stopsCommands = new ArrayList<>();
+            ArrayList<String> linesCommand = new ArrayList<>();
+
+            stops.forEach((s, s2) -> stopsCommands.add("insert into tcl_lyon_stops(nomarret,lignes) VALUES(\"%s\",\"%s\")".formatted(s, s2)));
+            lines.forEach((s, s2) -> linesCommand.add("insert into tcl_lyon_lines(ligne,arrets) VALUES(\"%s\",\"%s\")".formatted(s, s2)));
+            stopsCommands.forEach(databaseLite::update);
+            linesCommand.forEach(databaseLite::update);
+            if(verbose)
+                System.out.println("Database loaded!");
+        }else{
+            if(verbose)
+                System.out.println("Database already loaded");
+        }
+    }
+
 
     @Override
     public String update() {
-        return null;
+        return "Not implemented for TCL yet";
     }
 
     @Override
     public ArrayList<String> listOfLinesFromStopName(String name) {
-        return null;
+        String statement = "select lignes from tcl_lyon_stops where nomarret=\"" + name + "\"";
+        String s = (String) databaseLite.read(statement, "lignes");
+        return new ArrayList<>(Arrays.asList(s.split(";")));
     }
 
     @Override
     public ArrayList<String> listOfStopsFromLineName(String name) {
-        return null;
+        String statement = "select arrets from tcl_lyon_stops where ligne = \"" + name + "\"";
+        String s = (String) databaseLite.read(statement, "arrets");
+        return new ArrayList<>(Arrays.asList(s.split(";")));
     }
 
     @Override
     public HashMap<String, ArrayList<String>> listOfConnectionsFromLine(String name) {
-        return null;
+        return new HashMap<>();
     }
 
     @Override
@@ -84,7 +182,7 @@ public class TCLProvider implements Provider {
 
     @Override
     public String tableName() {
-        return null;
+        return "lignes";
     }
 
     @Override
@@ -94,27 +192,33 @@ public class TCLProvider implements Provider {
 
     @Override
     public ArrayList<String> executeValue(String endQuest) {
-        return null;
+        String statement = "select nomarret from tcl_lyon_stops where %s".formatted(endQuest);
+        return Utils.uniqueGet(databaseLite,statement);
     }
 
     @Override
     public ArrayList<String> exposeAllLines() {
-        return null;
+        String statement = "select ligne from tcl_lyon_lines";
+        return Utils.uniqueGet(databaseLite,statement);
     }
 
     @Override
     public ArrayList<String> exposeAllStops() {
-        return null;
+        String statement = "select nomarret from tcl_lyon_stops";
+        return Utils.uniqueGet(databaseLite,statement);
     }
 
     @Override
     public void load() {
         try {
-            JSONObject jsonObject = downloadJsonMetro();
-            System.out.println("t");
-        } catch (IOException e) {
+            loadDatabase();
+        } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     public static TCLProvider getInstance(boolean verbose) {
