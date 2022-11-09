@@ -133,24 +133,6 @@ public class TANProvider implements Provider {
         return commands;
     }
 
-    private HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> generateConnections(HashMap<String, ArrayList<String>> lines, HashMap<String, ArrayList<String>> stops) {
-        HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> connections = new HashMap<>();
-
-        for (String line : lines.keySet()) {
-            ArrayList<String> stopLine = lines.get(line);
-            for (String stop : stopLine) {
-                ArrayList<String> linesFromStop = stops.get(stop);
-                for (String l : linesFromStop) {
-                    if (!connections.containsKey(line))
-                        connections.put(line, new ArrayList<>());
-                    connections.get(line).add(new AbstractMap.SimpleImmutableEntry<>(l, stop));
-                }
-            }
-        }
-
-        return connections;
-    }
-
     private ArrayList<String> generateConnectionSqlCommands(HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> connections) {
 
         ArrayList<String> commands = new ArrayList<>();
@@ -162,7 +144,6 @@ public class TANProvider implements Provider {
 
         return commands;
     }
-
 
     private void loadDatabase() throws SQLException, JSONException {
         ResultSet rs = this.databaseLite.getResult("select * from tan_nantes_lines");
@@ -176,7 +157,7 @@ public class TANProvider implements Provider {
                 ArrayList<String> commands = new ArrayList<>();
                 commands.addAll(generateCommandForStops(stops));
                 commands.addAll(generateCommandForLines(lines));
-                commands.addAll(generateConnectionSqlCommands(generateConnections(lines, stops)));
+                commands.addAll(generateConnectionSqlCommands(Utils.generateConnections(lines, stops)));
                 commands.forEach(this.databaseLite::update);
             } catch (Exception e) {
                 throw new RuntimeException(e);

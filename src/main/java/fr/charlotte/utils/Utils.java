@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -49,6 +47,25 @@ public class Utils {
         fw.flush();
         fw.close();
         return true;
+    }
+
+
+    public static HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> generateConnections(HashMap<String, ArrayList<String>> lines, HashMap<String, ArrayList<String>> stops) {
+        HashMap<String, ArrayList<AbstractMap.SimpleImmutableEntry<String, String>>> connections = new HashMap<>();
+
+        for (String line : lines.keySet()) {
+            ArrayList<String> stopLine = lines.get(line);
+            for (String stop : stopLine) {
+                ArrayList<String> linesFromStop = stops.get(stop);
+                for (String l : linesFromStop) {
+                    if (!connections.containsKey(line))
+                        connections.put(line, new ArrayList<>());
+                    connections.get(line).add(new AbstractMap.SimpleImmutableEntry<>(l, stop));
+                }
+            }
+        }
+
+        return connections;
     }
 
     public static ArrayList<String> uniqueGet(DatabaseLite databaseLite, String statement) {
