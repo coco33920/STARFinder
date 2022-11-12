@@ -282,6 +282,7 @@ public class TCLProvider implements Provider {
     public static TCLProvider getInstance(boolean verbose) {
         if (instance == null)
             new TCLProvider(verbose);
+        instance.setVerbose(verbose);
         return instance;
     }
 }

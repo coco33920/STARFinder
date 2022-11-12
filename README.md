@@ -28,6 +28,7 @@ The current supported backends are
 * STAR (Rennes)
 * TAN (Nantes)
 * TCL (Lyon)
+* RTM (Marseilles) (*)
 
 ## Run
 You can run the project with `sbt`
@@ -143,7 +144,7 @@ be implemented to provide support for multiple backends (STAR, TBM, etc.)
   - [ ] Paris
   - [X] Lyon (TCL)
   - [X] Nantes (TAN)
-  - [ ] Marseille
+  - [X] Marseille (RTM)*
   - [ ] Lille
   - [ ] Bordeaux
   - [ ] Toulouse 
@@ -159,3 +160,6 @@ This project is using
 * [apache common-io](https://github.com/apache/commons-io) under Apache-2.0 license
 * [JLine](https://github.com/jline/jline3) under BSD license (see [JLine disclaimer](LICENCE-jline.md))
 * [org.Json](https://github.com/stleary/JSON-java) in the public domain
+
+## Other
+* (*) For RTM some stops are under different name and id so the connection doesn't really work out nicely. Might fix
