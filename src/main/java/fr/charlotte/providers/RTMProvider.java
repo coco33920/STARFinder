@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -70,17 +71,38 @@ public class RTMProvider implements Provider {
 
     @Override
     public ArrayList<String> listOfLinesFromStopName(String name) {
-        return new ArrayList<>();
+        String statement = "select lignes from rtm_marseilles_stops where nomarret=\"" + name + "\"";
+        String s = (String) databaseLite.read(statement, "lignes");
+        return new ArrayList<>(Arrays.asList(s.split(";")));
     }
 
     @Override
     public ArrayList<String> listOfStopsFromLineName(String name) {
-        return new ArrayList<>();
+        String statement = "select arrets from rtm_marseilles_lines where ligne = \"" + name + "\"";
+        String s = (String) databaseLite.read(statement, "arrets");
+        return new ArrayList<>(Arrays.asList(s.split(";")));
     }
 
     @Override
     public HashMap<String, ArrayList<String>> listOfConnectionsFromLine(String name) {
-        return new HashMap<>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        String statement = "select lignes from rtm_marseilles_connections where nomligne=\"" + name + "\"";
+        ArrayList<String> s = Utils.uniqueGet(databaseLite, statement);
+        for (String s1 : s) {
+            String[] sl = s1.split(";");
+            for (String l : sl) {
+                String[] v = l.split(",");
+                String key = v[0].replace("(", "");
+                String value = v[1].replace(")", "");
+                if (result.containsKey(key)) {
+                    result.get(key).add(value);
+                } else {
+                    result.put(key, new ArrayList<>());
+                    result.get(key).add(value);
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -98,19 +120,21 @@ public class RTMProvider implements Provider {
         return "Marseilles";
     }
 
-    @Override
     public ArrayList<String> executeValue(String endQuest) {
-        return new ArrayList<>();
+        String statement = "select nomarret from rtm_marseilles_stops where %s".formatted(endQuest);
+        return Utils.uniqueGet(databaseLite, statement);
     }
 
     @Override
     public ArrayList<String> exposeAllLines() {
-        return new ArrayList<>();
+        String statement = "select ligne from rtm_marseilles_lines";
+        return Utils.uniqueGet(databaseLite, statement);
     }
 
     @Override
     public ArrayList<String> exposeAllStops() {
-        return new ArrayList<>();
+        String statement = "select nomarret from rtm_marseilles_stops";
+        return Utils.uniqueGet(databaseLite, statement);
     }
     private JSONObject downloadRTMData(String id,String name) throws IOException {
         File f = new File(getHomeFile().getAbsolutePath() + File.separator + name + ".json");
