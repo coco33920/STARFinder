@@ -107,6 +107,8 @@ class REPL(var provider: Provider, var verbose: Boolean) {
               terminal.writer().println("For the city of Nantes")
               terminal.writer().print(writeColor(178, "TCL : ", terminal))
               terminal.writer().println("For the city of Lyon")
+              terminal.writer().print(writeColor(178, "RTM : ", terminal))
+              terminal.writer().println("For the city of Marseilles")
               continue = false
             else
               arg.toLowerCase match
@@ -136,6 +138,15 @@ class REPL(var provider: Provider, var verbose: Boolean) {
                   terminal.writer().print(writeColor(178, "TCL ", terminal))
                   terminal.writer().print(writeInBlue("as your content provider for the city of ", terminal))
                   terminal.writer().println(writeColor(178, "Lyon", terminal))
+                  continue = false;
+                case "rtm" | "marseilles" =>
+                  val p = RTMProvider.getInstance(verbose)
+                  p.load()
+                  this.provider = p
+                  terminal.writer().print(writeInBlue("You switched to ", terminal))
+                  terminal.writer().print(writeColor(178, "RTM ", terminal))
+                  terminal.writer().print(writeInBlue("as your content provider for the city of ", terminal))
+                  terminal.writer().println(writeColor(178, "Marseilles", terminal))
                   continue = false;
                 case e =>
                   terminal.writer().println(writeInBlue(s"A content provider for ${writeColor(178, e.toString, terminal)} ${writeInBlue("has not been implemented yet", terminal)}", terminal))

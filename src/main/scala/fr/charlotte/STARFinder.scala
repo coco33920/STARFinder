@@ -44,6 +44,8 @@ object STARFinder extends CommandApp(
           case "tan" => repl = true
           case "tcl" => repl = true
           case "lyon" => repl = true
+          case "rtm" => repl = true
+          case "marseilles" => repl = true
           case "default" => repl = true
           case _ =>
             if verbose then
@@ -51,6 +53,7 @@ object STARFinder extends CommandApp(
               println("STAR/Rennes")
               println("TAN/Nantes")
               println("TCL/Lyon")
+              println("RTM/Marseilles")
             else ()
 
         Config.config("defaultProvider").str.toUpperCase.trim match
@@ -60,6 +63,8 @@ object STARFinder extends CommandApp(
           case "NANTES" => Utils.setDefaultProvider(TANProvider.getInstance(verbose))
           case "TCL" => Utils.setDefaultProvider(TCLProvider.getInstance(verbose))
           case "LYON" => Utils.setDefaultProvider(TCLProvider.getInstance(verbose))
+          case "RTM" => Utils.setDefaultProvider(RTMProvider.getInstance(verbose))
+          case "MARSEILLES" => Utils.setDefaultProvider(RTMProvider.getInstance(verbose))
           case e => {
             if verbose then
               println("The backend for " + e + " is not implemented yet, defaulting to STAR")
