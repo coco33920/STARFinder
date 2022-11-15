@@ -24,6 +24,8 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
     val startLines = provider.listOfLinesFromStopName(start)
     val endLines = provider.listOfLinesFromStopName(end)
     val intersect = Utils.intersectArrayList(startLines, endLines)
+    println(startLines)
+    println(endLines)
     val usingList = util.ArrayList[String]
     if (!using.equalsIgnoreCase(""))
       using.split(",").foreach(e => usingList.add(e))
@@ -103,8 +105,11 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       def calculatePathForASingleTuple(ligne: String, hops: String): String = {
         val s: Array[String] = hops.split(";")
         val t: Array[(String, String)] =
-          s.filter(f => f.split(",").length > 1).map(elem => {
+          s.map(elem => {
             val v = elem.split(",")
+            if(v.length==1)
+              println(hops)
+              println(elem)
             (v(0).replace("(", ""), v(1).replace(")", ""))
           })
         val b = mutable.StringBuilder(s"${ligne} @ ${start} => ")
@@ -120,6 +125,7 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       def calculatePath(l: List[(String, String)]): String = {
         val b = mutable.StringBuilder();
         for ((v, s) <- l) {
+          println(v + "\n" + s)
           b.append(calculatePathForASingleTuple(v, s) + "\n")
         }
         b.toString();
@@ -128,6 +134,7 @@ case class Interpreter(provider: Provider, ast: Ast, terminal: Terminal) {
       if (list_of_path.flatten.isEmpty)
         REPL.writeInBlue("There is no ", terminal) + (if maxDepth == 0 then (REPL.writeInBlue("direct ", terminal)) else "") + REPL.writeInBlue("connections between ", terminal) + REPL.writeColor(178, start, terminal) + REPL.writeInBlue(" and ", terminal) + REPL.writeColor(178, end, terminal) + (if maxDepth > 0 then (REPL.writeInBlue(" within ", terminal) + REPL.writeColor(178, maxDepth.toString, terminal) + REPL.writeInBlue(" hops.", terminal)) else "")
       else
+        println(list_of_path)
         val p = if using.equalsIgnoreCase("") then "" else REPL.writeInBlue("and using : ", terminal) + REPL.writeColor(178, String.join(",", usingList), terminal)
         REPL.writeInBlue("To go from ", terminal) + REPL.writeColor(178, start, terminal) + REPL.writeInBlue(" to ", terminal) + REPL.writeColor(178, end, terminal) + REPL.writeInBlue(s" within ${REPL.writeColor(178, maxDepth.toString, terminal)} ${REPL.writeInBlue("hops", terminal)} $p ${REPL.writeInBlue("\nYou can take the following paths :\n", terminal)}" + REPL.writeColor(178, list_of_path.map(m => calculatePath(m)).mkString("\n"), terminal), terminal)
 
